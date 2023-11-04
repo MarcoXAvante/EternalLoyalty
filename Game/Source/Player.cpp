@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "Point.h"
 #include "Physics.h"
+#include <iostream>
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
@@ -21,8 +22,8 @@ Player::~Player() {
 bool Player::Awake() {
 
 	//L03: DONE 2: Initialize Player parameters
-	position = iPoint(config.attribute("x").as_int(), config.attribute("y").as_int());
-
+	initialPos = iPoint(config.attribute("x").as_int(), config.attribute("y").as_int());
+	position = initialPos;
 	return true;
 }
 
@@ -32,7 +33,7 @@ bool Player::Start() {
 
 	// L07 DONE 5: Add physics to the player - initialize physics body
 	app->tex->GetSize(texture, texW, texH);
-	pbody = app->physics->CreateCircle(position.x, position.y, texW / 2, bodyType::DYNAMIC);
+	pbody = app->physics->CreateCircle(initialPos.x, initialPos.y, texW / 2, bodyType::DYNAMIC);
 
 	// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	pbody->listener = this;
@@ -42,7 +43,6 @@ bool Player::Start() {
 
 	//initialize audio effect
 	pickCoinFxId = app->audio->LoadFx(config.attribute("coinfxpath").as_string());
-
 
 	return true;
 }
@@ -69,6 +69,21 @@ bool Player::Update(float dt)
 		jumpForceReduce = 0;
 	}
 
+	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
+		pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(initialPos.x), PIXEL_TO_METERS(initialPos.y)), pbody->body->GetAngle());
+		position = initialPos;
+
+	}
+
+	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
+		pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(initialPos.x), PIXEL_TO_METERS(initialPos.y)), pbody->body->GetAngle());
+		position = initialPos;
+	}
+
+	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) {
+		god = !god;
+	}
+
 	if (remainingJumpSteps > 0)
 	{
 		//to change velocity by 10 in one time step
@@ -78,7 +93,9 @@ bool Player::Update(float dt)
 
 		jumpForceReduce = maxJumpSteps - remainingJumpSteps;
 		pbody->body->ApplyForce(b2Vec2(0, -(force * dt)), pbody->body->GetWorldCenter(), true);
-		remainingJumpSteps--;
+		if (!god) {
+			remainingJumpSteps--;
+		}
 	}
 
 	pbody->body->SetLinearVelocity(velocity);

@@ -33,6 +33,7 @@ public:
 	SDL_Texture* texture = NULL;
 	pugi::xml_node config;
 	uint texW, texH;
+	bool god = false;
 
 	int remainingJumpSteps = 0;
 	int jumpForceReduce = 0;
