@@ -2,7 +2,7 @@
 
 ## Description
 
-Platform game delevoped for a subject in the career of Programming and Desing in videogmaes. 
+Platform game delevoped for a subject in the career of Programming and Desing in videogmaes - UPC. 
 
 The game is about a dog trying to arrive to his owner.
 
