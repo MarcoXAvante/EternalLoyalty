@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="340" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="47" nextobjectid="91">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="340" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="47" nextobjectid="95">
  <tileset firstgid="1" name="forestatardecer" tilewidth="16" tileheight="16" tilecount="696" columns="24">
   <image source="forestatardecer.png" width="384" height="464"/>
   <tile id="238">
@@ -42795,11 +42795,11 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="287"/>
+   <tile gid="670"/>
+   <tile gid="671"/>
+   <tile gid="670"/>
+   <tile gid="239"/>
    <tile/>
    <tile/>
    <tile/>
@@ -43135,11 +43135,11 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="311"/>
+   <tile gid="455"/>
+   <tile gid="501"/>
+   <tile gid="455"/>
+   <tile gid="263"/>
    <tile/>
    <tile/>
    <tile/>
@@ -43475,10 +43475,10 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="646"/>
+   <tile gid="501"/>
+   <tile gid="455"/>
+   <tile gid="623"/>
    <tile/>
    <tile/>
    <tile/>
@@ -43816,8 +43816,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="646"/>
+   <tile gid="623"/>
    <tile/>
    <tile/>
    <tile/>
@@ -44830,11 +44830,11 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="287"/>
+   <tile gid="670"/>
+   <tile gid="671"/>
+   <tile gid="670"/>
+   <tile gid="239"/>
    <tile/>
    <tile/>
    <tile/>
@@ -45170,11 +45170,11 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="311"/>
+   <tile gid="455"/>
+   <tile gid="501"/>
+   <tile gid="455"/>
+   <tile gid="263"/>
    <tile/>
    <tile/>
    <tile/>
@@ -45510,10 +45510,10 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="646"/>
+   <tile gid="501"/>
+   <tile gid="455"/>
+   <tile gid="623"/>
    <tile/>
    <tile/>
    <tile/>
@@ -45851,8 +45851,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="646"/>
+   <tile gid="623"/>
    <tile/>
    <tile/>
    <tile/>
@@ -47814,9 +47814,6 @@
   <object id="59" x="1776" y="320">
    <polygon points="0,0 0,-16 32,-48 160,-48 192,-16 192,0"/>
   </object>
-  <object id="60" x="1984" y="320">
-   <polyline points="112,0 0,0 48,-64 144,-64 160,-80 160,-160 144,-160 144,-176 160,-176 160,-192 240,-272 272,-272 272,-240 240,-240 192,-192 192,-96 224,-64 240,-64 224,-48 240,-48 256,-32 224,0 112,0 112,-16 96,-32 80,-32 80,-48 224,-48"/>
-  </object>
   <object id="61" x="2272" y="128">
    <polygon points="0,0 48,0 64,16 64,32 48,32 16,64 -16,32 -16,16 0,0"/>
   </object>
@@ -47891,6 +47888,15 @@
   </object>
   <object id="90" x="4800" y="256">
    <polygon points="0,0 16,0 48,-32 176,-32 256,48 432,48 448,32 448,-80 480,-112 640,-112 640,64 64,64 16,16 0,16"/>
+  </object>
+  <object id="92" x="1952" y="176">
+   <polygon points="0,0 48,0 64,16 64,32 48,32 16,64 -16,32 -16,16 0,0"/>
+  </object>
+  <object id="93" x="1984" y="320">
+   <polygon points="0,0 48,-64 144,-64 160,-80 160,-160 144,-160 144,-176 160,-176 160,-192 240,-272 272,-272 272,-240 240,-240 192,-192 192,-96 224,-64 240,-64 224,-48 240,-48 256,-32 224,0"/>
+  </object>
+  <object id="94" x="2032" y="80">
+   <polygon points="0,0 48,0 64,16 64,32 48,32 16,64 -16,32 -16,16 0,0"/>
   </object>
  </objectgroup>
 </map>
