@@ -1,24 +1,24 @@
-# {Eternal Loyalty}
+# Eternal Loyalty
 
 ## Description
 
-{Platform game delevoped for a subject in the career of Programming and Desing in videogmaes. The game is about a dog trying to arrive to his owner.}
+Platform game delevoped for a subject in the career of Programming and Desing in videogmaes. The game is about a dog trying to arrive to his owner.
 
 ## Key Features
 
- - {Jumps}
- - {Fall into the void}
- - {Kind of flying}
- - {Go forwards and backwards}
+ - Jumps
+ - Fall into the void
+ - Kind of flying
+ - Go forwards and backwards
  
 ## Controls
 
- - {ControlsScheme}
+ - ControlsScheme
 
 ## Developers
 
- - {Marc Avante} - {Programer and develop the game}
- - {Andrea Doña} - {Art disegner and level designer}
+ - Marc Avante - Programer and developer.
+ - Andrea Doña - Art disegner and level designer.
 
 
 ## License
