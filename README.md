@@ -19,13 +19,20 @@ The game is about a dog trying to arrive to his owner.
  
 ## Controls
 
- - To move it is used W-A-S-D.
+ - A to move left.
+ - D to move right.
+ - SPACE to jump.
+ - F1 to go back to start
+ - F3 to go back to start
+ - F4 to die and trigger die animation.
+ - F9 toggle debug.
+ - F10 God mode.
 
 ## Developers
 
  - Marc Avante - Programer and developer.
  - Andrea Doña - Art disegner and level designer.
- - Both taking the roll of managment.
+ - Both taking the roll of management.
 
 
 ## License
