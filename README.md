@@ -34,6 +34,9 @@ The game is about a dog trying to arrive to his owner.
  - Andrea Doña - Art disegner and level designer.
  - Both taking the roll of management.
 
+## Github Link
+
+ - [Link to the project](https://github.com/MarcoXAvante/EternalLoyalty).
 
 ## License
 
