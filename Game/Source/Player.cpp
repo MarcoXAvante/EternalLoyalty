@@ -13,6 +13,23 @@
 Player::Player() : Entity(EntityType::PLAYER)
 {
 	name.Create("Player");
+	idleDog.PushBack({ 10, 7, 46, 37 });
+	dieDog.PushBack({ 60, 7, 46, 37});
+	dieDog.PushBack({ 115, 7, 46, 37});
+	dieDog.PushBack({ 169, 7, 46, 37});
+	dieDog.speed = 0.10f;
+	walkingDog.PushBack({60, 58, 46, 37});
+	walkingDog.PushBack({117, 58, 46, 37});
+	walkingDog.PushBack({175, 58, 46, 37});
+	walkingDog.PushBack({226, 58, 46, 37});
+	walkingDog.PushBack({276, 58, 46, 37});
+	walkingDog.PushBack({335, 58, 46, 37});
+	walkingDog.speed = 0.20f;
+	jumpDog.PushBack({58, 106, 46, 37});
+	jumpDog.PushBack({115, 106, 46, 37});
+	jumpDog.PushBack({171, 106, 46, 37});
+	jumpDog.PushBack({228, 106, 46, 37});
+	jumpDog.speed = 0.20f;
 }
 
 Player::~Player() {
@@ -33,8 +50,8 @@ bool Player::Start() {
 
 	// L07 DONE 5: Add physics to the player - initialize physics body
 	app->tex->GetSize(texture, texW, texH);
-	pbody = app->physics->CreateCircle(initialPos.x, initialPos.y, texW / 2, bodyType::DYNAMIC);
-
+	pbody = app->physics->CreateRectangle(initialPos.x, initialPos.y, 44, 32, bodyType::DYNAMIC);
+	pbody->body->SetFixedRotation(true);
 	// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	pbody->listener = this;
 
@@ -43,7 +60,7 @@ bool Player::Start() {
 
 	//initialize audio effect
 	pickCoinFxId = app->audio->LoadFx(config.attribute("coinfxpath").as_string());
-
+	currentAnimation = &idleDog;
 	return true;
 }
 
@@ -54,19 +71,32 @@ bool Player::Update(float dt)
 	//L03: DONE 4: render the player texture and modify the position of the player using WSAD keys and render the texture
 	
 	b2Vec2 velocity = b2Vec2(0, -GRAVITY_Y);
+	currentAnimation->Update();
 
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -0.2*dt;
+		currentAnimation = &walkingDog;
+	}
+
+	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_UP) {
+		currentAnimation = &idleDog;
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		velocity.x = 0.2*dt;
+		currentAnimation = &walkingDog;
 	}
-		
-	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)// && pbody->listener->OnCollision())
-	{
-		remainingJumpSteps = maxJumpSteps; //  1/10th of a second at 60Hz
-		jumpForceReduce = 0;
+
+	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_UP) {
+		currentAnimation = &idleDog;
+	}
+
+	if (pbody->body->GetContactList() != NULL) {
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)// && pbody->listener->OnCollision())
+		{
+			remainingJumpSteps = maxJumpSteps; //  1/10th of a second at 60Hz
+			jumpForceReduce = 0;
+		}
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
@@ -84,6 +114,11 @@ bool Player::Update(float dt)
 		god = !god;
 	}
 
+	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
+		currentAnimation = &dieDog;
+		//dead = true;
+	}
+
 	if (remainingJumpSteps > 0)
 	{
 		//to change velocity by 10 in one time step
@@ -97,13 +132,16 @@ bool Player::Update(float dt)
 			remainingJumpSteps--;
 		}
 	}
+	else {
+		currentAnimation = &idleDog;
+	}
 
 	pbody->body->SetLinearVelocity(velocity);
 	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.x = METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2;
-	position.y = METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2;
+	position.x = METERS_TO_PIXELS(pbodyPos.p.x) - 48 / 2;
+	position.y = METERS_TO_PIXELS(pbodyPos.p.y) - 32 / 2;
 
-	app->render->DrawTexture(texture,position.x,position.y);
+	app->render->DrawTexture(texture, position.x, position.y, &currentAnimation->GetCurrentFrame());
 
 	return true;
 }

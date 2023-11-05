@@ -19,7 +19,8 @@ struct TileSet
     int spacing;
     int margin;
     int tilecount;
-    int columns;
+    int columns; 
+
 
     SDL_Texture* texture;
 
@@ -128,6 +129,8 @@ public:
 
     // L08: DONE 2: Implement function to the Tileset based on a tile id
     TileSet* GetTilesetFromTileId(int gid) const;
+    int getMapHeght() { return mapData.height * mapData.tileheight; }      
+    int getMapWidth() { return mapData.width * mapData.tilewidth; }
 
     // L06: DONE 6: Load a group of properties 
     bool LoadProperties(pugi::xml_node& node, Properties& properties);

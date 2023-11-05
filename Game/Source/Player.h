@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "Point.h"
 #include "SDL/include/SDL.h"
+#include "Animation.h"
 
 struct SDL_Texture;
 
@@ -34,6 +35,13 @@ public:
 	pugi::xml_node config;
 	uint texW, texH;
 	bool god = false;
+	bool dead = false;
+
+	Animation walkingDog;
+	Animation idleDog;
+	Animation dieDog;
+	Animation jumpDog;
+	Animation* currentAnimation = nullptr;
 
 	int remainingJumpSteps = 0;
 	int jumpForceReduce = 0;
