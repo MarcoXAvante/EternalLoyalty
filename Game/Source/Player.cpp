@@ -17,6 +17,7 @@ Player::Player() : Entity(EntityType::PLAYER)
 	dieDog.PushBack({ 60, 7, 46, 37});
 	dieDog.PushBack({ 115, 7, 46, 37});
 	dieDog.PushBack({ 169, 7, 46, 37});
+	dieDog.loop = false;
 	dieDog.speed = 0.10f;
 	walkingDog.PushBack({60, 58, 46, 37});
 	walkingDog.PushBack({117, 58, 46, 37});
@@ -76,6 +77,7 @@ bool Player::Update(float dt)
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -0.2*dt;
 		currentAnimation = &walkingDog;
+		flip = true;
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_UP) {
@@ -85,6 +87,7 @@ bool Player::Update(float dt)
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		velocity.x = 0.2*dt;
 		currentAnimation = &walkingDog;
+		flip = false;
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_UP) {
@@ -103,11 +106,31 @@ bool Player::Update(float dt)
 		pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(initialPos.x), PIXEL_TO_METERS(initialPos.y)), pbody->body->GetAngle());
 		position = initialPos;
 
+		app->render->camera.y = ((position.y - texH / 2) - (app->scene->windowH / 2)) * -1;
+		app->render->camera.x = ((position.x - texW / 2) - (app->scene->windowW / 2)) * -1;
+
+		if (app->render->camera.x >= 0) {
+			app->render->camera.x = 0;
+		}
+		if (app->render->camera.y >= 0) {
+			app->render->camera.y = 0;
+		}
+
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
 		pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(initialPos.x), PIXEL_TO_METERS(initialPos.y)), pbody->body->GetAngle());
 		position = initialPos;
+
+		app->render->camera.y = ((position.y - texH / 2) - (app->scene->windowH / 2)) * -1;
+		app->render->camera.x = ((position.x - texW / 2) - (app->scene->windowW / 2)) * -1;
+
+		if (app->render->camera.x >= 0) {
+			app->render->camera.x = 0;
+		}
+		if (app->render->camera.y >= 0) {
+			app->render->camera.y = 0;
+		}
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) {
@@ -116,6 +139,11 @@ bool Player::Update(float dt)
 
 	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
 		currentAnimation = &dieDog;
+		//dead = true;
+	}
+
+	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
+		dieDog.Reset();
 		//dead = true;
 	}
 
@@ -132,16 +160,13 @@ bool Player::Update(float dt)
 			remainingJumpSteps--;
 		}
 	}
-	else {
-		currentAnimation = &idleDog;
-	}
 
 	pbody->body->SetLinearVelocity(velocity);
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.x = METERS_TO_PIXELS(pbodyPos.p.x) - 48 / 2;
 	position.y = METERS_TO_PIXELS(pbodyPos.p.y) - 32 / 2;
 
-	app->render->DrawTexture(texture, position.x, position.y, &currentAnimation->GetCurrentFrame());
+	app->render->DrawTextureDX(texture, position.x, position.y, flip, &currentAnimation->GetCurrentFrame());
 
 	return true;
 }

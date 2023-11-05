@@ -37,15 +37,17 @@ public:
 	bool god = false;
 	bool dead = false;
 
+
 	Animation walkingDog;
 	Animation idleDog;
 	Animation dieDog;
 	Animation jumpDog;
 	Animation* currentAnimation = nullptr;
 
+	bool flip;
 	int remainingJumpSteps = 0;
 	int jumpForceReduce = 0;
-	int maxJumpSteps = 20;
+	int maxJumpSteps = 10;
 
 	//Audio fx
 	int pickCoinFxId;

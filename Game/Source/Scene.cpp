@@ -31,10 +31,13 @@ bool Scene::Awake(pugi::xml_node config)
 	player = (Player*) app->entityManager->CreateEntity(EntityType::PLAYER);
 	//Assigns the XML node to a member in player
 	player->config = config.child("player");
+	app->audio->PlayMusic(config.child("music").attribute("path").as_string(), 1.0f);
 
 	//Get the map name from the config file and assigns the value in the module
 	app->map->name = config.child("map").attribute("name").as_string();
 	app->map->path = config.child("map").attribute("path").as_string();
+
+
 
 	// iterate all items in the scene
 	// Check https://pugixml.org/docs/quickstart.html#access
@@ -51,14 +54,12 @@ bool Scene::Awake(pugi::xml_node config)
 bool Scene::Start()
 {
 	// NOTE: We have to avoid the use of paths in the code, we will move it later to a config file
-	img = app->tex->Load("Assets/Textures/test.png");
 	
 	//Music is commented so that you can add your own music
 	//app->audio->PlayMusic("Assets/Audio/Music/music_spy.ogg");
 
 	//Get the size of the window
 	app->win->GetWindowSize(windowW, windowH);
-
 	//Get the size of the texture
 	app->tex->GetSize(img, texW, texH);
 

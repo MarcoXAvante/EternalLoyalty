@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "Player.h"
+#include <iostream>
 
 struct SDL_Texture;
 
@@ -33,12 +34,13 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-private:
+public:
 	SDL_Texture* img;
 	float textPosX, textPosY = 0;
 	uint texW, texH;
 	uint windowW, windowH;
 
+	pugi::xml_node config;
 	//L03: DONE 3b: Declare a Player attribute
 	Player* player;
 

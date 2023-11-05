@@ -1,36 +1,6 @@
-﻿F:\Programas\x86\Visual Studio\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: El directorio Output no termina con una barra diagonal final. Esta instancia de compilación agregará la barra diagonal porque es necesaria para que se pueda evaluar correctamente el directorio Output.
-  EntityManager.cpp
-  Item.cpp
-  Main.cpp
-  App.cpp
-  Audio.cpp
-  Input.cpp
-  Map.cpp
-  PerfTimer.cpp
-  Physics.cpp
-C:\Users\andre\Desktop\Uni\AÑO2\Desarrollo\EternalLoyalty\Game\Source\Physics.cpp(99,23): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
-C:\Users\andre\Desktop\Uni\AÑO2\Desarrollo\EternalLoyalty\Game\Source\Physics.cpp(100,25): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
-C:\Users\andre\Desktop\Uni\AÑO2\Desarrollo\EternalLoyalty\Game\Source\Physics.cpp(136,25): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
-C:\Users\andre\Desktop\Uni\AÑO2\Desarrollo\EternalLoyalty\Game\Source\Physics.cpp(137,26): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
-C:\Users\andre\Desktop\Uni\AÑO2\Desarrollo\EternalLoyalty\Game\Source\Physics.cpp(194,21): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\andre\Desktop\Uni\AÑO2\Desarrollo\EternalLoyalty\Game\Source\Physics.cpp(385,13): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\andre\Desktop\Uni\AÑO2\Desarrollo\EternalLoyalty\Game\Source\Physics.cpp(386,13): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\andre\Desktop\Uni\AÑO2\Desarrollo\EternalLoyalty\Game\Source\Physics.cpp(392,27): warning C4244: 'return': conversión de 'float32' a 'int'; posible pérdida de datos
-  Player.cpp
-C:\Users\andre\Desktop\Uni\AÑO2\Desarrollo\EternalLoyalty\Game\Source\Player.cpp(77,20): warning C4244: '=': conversión de 'double' a 'float32'; posible pérdida de datos
-C:\Users\andre\Desktop\Uni\AÑO2\Desarrollo\EternalLoyalty\Game\Source\Player.cpp(86,19): warning C4244: '=': conversión de 'double' a 'float32'; posible pérdida de datos
-C:\Users\andre\Desktop\Uni\AÑO2\Desarrollo\EternalLoyalty\Game\Source\Player.cpp(125,15): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: El directorio Output no termina con una barra diagonal final. Esta instancia de compilación agregará la barra diagonal porque es necesaria para que se pueda evaluar correctamente el directorio Output.
   Scene.cpp
-C:\Users\andre\Desktop\Uni\AÑO2\Desarrollo\EternalLoyalty\Game\Source\Scene.cpp(82,33): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\andre\Desktop\Uni\AÑO2\Desarrollo\EternalLoyalty\Game\Source\Scene.cpp(87,33): warning C4018: '<': no coinciden signed/unsigned
-  Render.cpp
-C:\Users\andre\Desktop\Uni\AÑO2\Desarrollo\EternalLoyalty\Game\Source\Render.cpp(218,45): warning C4244: '=': conversión de 'double' a 'int'; posible pérdida de datos
-C:\Users\andre\Desktop\Uni\AÑO2\Desarrollo\EternalLoyalty\Game\Source\Render.cpp(219,45): warning C4244: '=': conversión de 'double' a 'int'; posible pérdida de datos
-  Textures.cpp
-  Timer.cpp
-  Window.cpp
-  Log.cpp
-  pugixml.cpp
-  Generando código...
-  Game.vcxproj -> C:\Users\andre\Desktop\Uni\AÑO2\Desarrollo\EternalLoyalty\Build\Debug\Game.exe
+C:\Users\Usuari\Documents\GitHub\EternalLoyalty\Game\Source\Scene.cpp(83,33): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\Usuari\Documents\GitHub\EternalLoyalty\Game\Source\Scene.cpp(88,33): warning C4018: '<': no coinciden signed/unsigned
+  Game.vcxproj -> C:\Users\Usuari\Documents\GitHub\EternalLoyalty\Build\Debug\Game.exe
           1 archivo(s) copiado(s).

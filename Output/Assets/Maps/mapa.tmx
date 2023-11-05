@@ -123,6 +123,9 @@
   </tile>
  </tileset>
  <layer id="47" name="FONDO CIELO" width="340" height="20">
+  <properties>
+   <property name="Draw" type="bool" value="true"/>
+  </properties>
   <data>
    <tile gid="313"/>
    <tile gid="313"/>
@@ -6927,6 +6930,9 @@
   </data>
  </layer>
  <layer id="51" name="NUBES" width="340" height="20">
+  <properties>
+   <property name="Draw" type="bool" value="true"/>
+  </properties>
   <data>
    <tile/>
    <tile/>

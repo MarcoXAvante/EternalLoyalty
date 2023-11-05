@@ -48,7 +48,7 @@ bool Item::Update(float dt)
 	position.x = METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2;
 	position.y = METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2;
 
-	app->render->DrawTexture(texture, position.x, position.y);
+	app->render->DrawTexture(texture, position.x, position.y, false);
 
 	return true;
 }

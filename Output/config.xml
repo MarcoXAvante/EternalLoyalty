@@ -21,6 +21,7 @@
   <scene>
     <player x="64" y="208" texturePath="Assets/Textures/Perrete/Animacion perrete.png" coinfxpath="Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg"/>
     <map path="Assets/Maps/" name="mapa.tmx"/>
+	<music path="Assets/Audio/Music/level1.wav" />
   </scene>
   
 </config>
