@@ -10,6 +10,10 @@ Platform game delevoped for a subject in the career of Programming and Desing in
  - Fall into the void.
  - Kind of flying.
  - Go forwards and backwards.
+ - Animations.
+ - Colliders.
+ - Die.
+ - Textures.
  
 ## Controls
 
