@@ -6,14 +6,14 @@ Platform game delevoped for a subject in the career of Programming and Desing in
 
 ## Key Features
 
- - Jumps
- - Fall into the void
- - Kind of flying
- - Go forwards and backwards
+ - Jumps.
+ - Fall into the void.
+ - Kind of flying.
+ - Go forwards and backwards.
  
 ## Controls
 
- - ControlsScheme
+ - To move it is used W-A-S-D.
 
 ## Developers
 
