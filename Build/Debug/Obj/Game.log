@@ -1,0 +1,7 @@
+﻿D:\Visual Studio\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(453,5): warning MSB8004: El directorio Output no termina con una barra diagonal final. Esta instancia de compilación agregará la barra diagonal porque es necesaria para que se pueda evaluar correctamente el directorio Output.
+  Player.cpp
+D:\Downloads\Eternal Loyalty\Game\Source\Player.cpp(72,20): warning C4244: '=': conversión de 'double' a 'float32'; posible pérdida de datos
+D:\Downloads\Eternal Loyalty\Game\Source\Player.cpp(81,19): warning C4244: '=': conversión de 'double' a 'float32'; posible pérdida de datos
+D:\Downloads\Eternal Loyalty\Game\Source\Player.cpp(120,15): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+  Game.vcxproj -> D:\Downloads\Eternal Loyalty\Build\Debug\Game.exe
+          1 archivo(s) copiado(s).
