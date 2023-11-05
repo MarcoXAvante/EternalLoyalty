@@ -2,7 +2,9 @@
 
 ## Description
 
-Platform game delevoped for a subject in the career of Programming and Desing in videogmaes. The game is about a dog trying to arrive to his owner.
+Platform game delevoped for a subject in the career of Programming and Desing in videogmaes. 
+
+The game is about a dog trying to arrive to his owner.
 
 ## Key Features
 
