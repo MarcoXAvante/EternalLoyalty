@@ -25,6 +25,7 @@ The game is about a dog trying to arrive to his owner.
 
  - Marc Avante - Programer and developer.
  - Andrea Doña - Art disegner and level designer.
+ - Both taking the roll of managment.
 
 
 ## License
