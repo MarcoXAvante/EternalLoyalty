@@ -47,7 +47,7 @@ public:
 	bool flip;
 	int remainingJumpSteps = 0;
 	int jumpForceReduce = 0;
-	int maxJumpSteps = 15;
+	int maxJumpSteps = 30;
 
 	//Audio fx
 	int pickCoinFxId;

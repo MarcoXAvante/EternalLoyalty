@@ -51,7 +51,7 @@ bool Player::Start() {
 
 	// L07 DONE 5: Add physics to the player - initialize physics body
 	app->tex->GetSize(texture, texW, texH);
-	pbody = app->physics->CreateRectangle(initialPos.x, initialPos.y, 44, 32, bodyType::DYNAMIC);
+	pbody = app->physics->CreateCircle(initialPos.x, initialPos.y, 16, bodyType::DYNAMIC);
 	pbody->body->SetFixedRotation(true);
 	// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	pbody->listener = this;
@@ -75,7 +75,7 @@ bool Player::Update(float dt)
 	currentAnimation->Update();
 
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		velocity.x = -0.2*dt;
+		velocity.x = -0.3*dt;
 		currentAnimation = &walkingDog;
 		flip = true;
 	}
@@ -85,7 +85,7 @@ bool Player::Update(float dt)
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		velocity.x = 0.2*dt;
+		velocity.x = 0.3 *dt;
 		currentAnimation = &walkingDog;
 		flip = false;
 	}
@@ -94,11 +94,36 @@ bool Player::Update(float dt)
 		currentAnimation = &idleDog;
 	}
 
-	if (pbody->body->GetContactList() != NULL) {
-		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)// && pbody->listener->OnCollision())
+	if (!god) {
+		if (pbody->body->GetContactList() != NULL) {
+			if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)// && pbody->listener->OnCollision())
+			{
+				remainingJumpSteps = maxJumpSteps; //  1/10th of a second at 60Hz
+				jumpForceReduce = 0;
+			}
+		}
+
+		if (remainingJumpSteps > 0)
 		{
-			remainingJumpSteps = maxJumpSteps; //  1/10th of a second at 60Hz
-			jumpForceReduce = 0;
+			//to change velocity by 10 in one time step
+			pbody->body->SetLinearDamping(0.1f);
+			float force = pbody->body->GetMass() * 10 / (1 / 30.0); //f = mv/t
+			force /= 4.0;	//spread this over 6 time steps
+			force -= jumpForceReduce;
+
+			jumpForceReduce = (maxJumpSteps - remainingJumpSteps);
+			pbody->body->ApplyForce(b2Vec2(0, -(force * dt)), pbody->body->GetWorldCenter(), true);
+			remainingJumpSteps--;
+		}
+	}
+	else {
+		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+			velocity.y = -0.2 * dt;
+			currentAnimation = &walkingDog;
+		}
+		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+			velocity.y = 0.2 * dt;
+			currentAnimation = &walkingDog;
 		}
 	}
 
@@ -138,27 +163,9 @@ bool Player::Update(float dt)
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
+		dieDog.Reset();
 		currentAnimation = &dieDog;
 		//dead = true;
-	}
-
-	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
-		dieDog.Reset();
-		//dead = true;
-	}
-
-	if (remainingJumpSteps > 0)
-	{
-		//to change velocity by 10 in one time step
-		float force = pbody->body->GetMass() * 10 / (1 / 30.0); //f = mv/t
-		force /= 4.0;	//spread this over 6 time steps
-		force -= jumpForceReduce;
-
-		jumpForceReduce = maxJumpSteps - remainingJumpSteps;
-		pbody->body->ApplyForce(b2Vec2(0, -(force * dt)), pbody->body->GetWorldCenter(), true);
-		if (!god) {
-			remainingJumpSteps--;
-		}
 	}
 
 	pbody->body->SetLinearVelocity(velocity);
