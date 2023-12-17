@@ -7,6 +7,7 @@
 #include "Box2D/Box2D/Box2D.h"
 #include "p2List.h"
 #include "PugiXml\src\pugixml.hpp"
+#include "Pathfinding.h"
 
 // L05: DONE 2: Create a struct to hold information for a TileSet
 // Ignore Terrain Types and Tile Types for now, but we want the image!
@@ -139,6 +140,7 @@ public:
     p2List<PhysBody*> colliders;
     SString name;
     SString path;
+    PathFinding* pathfinding;
 
 private:
     // L05: DONE 1: Declare a variable data of the struct MapData

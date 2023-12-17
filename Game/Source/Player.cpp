@@ -70,12 +70,25 @@ bool Player::Update(float dt)
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 
 	//L03: DONE 4: render the player texture and modify the position of the player using WSAD keys and render the texture
-	
-	b2Vec2 velocity = b2Vec2(0, -GRAVITY_Y);
+	b2Vec2 velocity;
+	if (!god) {
+		velocity = b2Vec2(0, -GRAVITY_Y);
+	}
+	else {
+		velocity = b2Vec2(0, 0);
+	}
+
+	if (pbody->body->GetContactList() == NULL) {
+		grounded = false;
+	}
+
 	currentAnimation->Update();
 
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -0.3*dt;
+		if (remainingJumpSteps == 0 && grounded) {
+			velocity.y = 0.01 * dt;
+		}
 		currentAnimation = &walkingDog;
 		flip = true;
 	}
@@ -86,6 +99,9 @@ bool Player::Update(float dt)
 
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		velocity.x = 0.3 *dt;
+		if (remainingJumpSteps == 0 && grounded) {
+			velocity.y = 0.01 * dt;
+		}
 		currentAnimation = &walkingDog;
 		flip = false;
 	}
@@ -165,14 +181,12 @@ bool Player::Update(float dt)
 	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
 		dieDog.Reset();
 		currentAnimation = &dieDog;
-		//dead = true;
 	}
 
 	pbody->body->SetLinearVelocity(velocity);
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.x = METERS_TO_PIXELS(pbodyPos.p.x) - 48 / 2;
 	position.y = METERS_TO_PIXELS(pbodyPos.p.y) - 32 / 2;
-
 	app->render->DrawTextureDX(texture, position.x, position.y, flip, &currentAnimation->GetCurrentFrame());
 
 	return true;
@@ -188,6 +202,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	switch (physB->ctype)
 	{
 	case ColliderType::PLATFORM:
+		grounded = true;
 		LOG("Collision PLATFORM");
 		break;
 	case ColliderType::ITEM:

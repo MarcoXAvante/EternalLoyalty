@@ -79,15 +79,18 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 
-	int limitCamX = player->position.x - (windowW / 2);
-	if (limitCamX > 0 && limitCamX < (app->map->getMapWidth() - windowW)) {
-		app->render->camera.x = (player->position.x - windowW / 2) * -1;
+	int limitCamX = ((player->position.x * app->win->scale - (windowW / 2)));
+	if (limitCamX > 0 && limitCamX < (app->map->getMapWidth() - windowW) * app->win->scale) {
+		app->render->camera.x = (player->position.x * app->win->scale - (windowW / 2)) * -1;
 	}
 
+	/*
 	int limitCamY = player->position.y - (windowH / 2);
 	if (limitCamY > 0 && limitCamY < (app->map->getMapHeght() - windowH)) {
 		app->render->camera.y = (player->position.y - windowH / 2) * -1;
 	}
+	*/
+
 	/*
 	//L02 DONE 3: Make the camera movement independent of framerate
 	float camSpeed = 1; 
