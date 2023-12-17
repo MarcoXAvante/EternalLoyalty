@@ -1,61 +1,32 @@
-﻿D:\Visual Studio\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(453,5): warning MSB8004: El directorio Output no termina con una barra diagonal final. Esta instancia de compilación agregará la barra diagonal porque es necesaria para que se pueda evaluar correctamente el directorio Output.
-  EntityManager.cpp
-  Item.cpp
-  Main.cpp
-  App.cpp
-  Audio.cpp
-  Input.cpp
-  Map.cpp
-  Pathfinding.cpp
-D:\Downloads\Eternal Loyalty\Game\Source\Point.h(111,24): warning C4244: 'argumento': conversión de 'TYPE' a 'float'; posible pérdida de datos
-          with
-          [
-              TYPE=int
-          ]
-D:\Downloads\Eternal Loyalty\Game\Source\Point.h(107): message : al compilar la función del miembro clase plantilla "TYPE Point<TYPE>::DistanceTo(const Point<TYPE> &) const"
-          with
-          [
-              TYPE=int
-          ]
-D:\Downloads\Eternal Loyalty\Game\Source\Pathfinding.cpp(262): message : Vea la referencia a la creación de una instancia de la función plantilla "TYPE Point<TYPE>::DistanceTo(const Point<TYPE> &) const" que se está compilando
-          with
-          [
-              TYPE=int
-          ]
-D:\Downloads\Eternal Loyalty\Game\Source\Entity.h(87): message : Vea la referencia a la creación de una instancia de clase plantilla "Point<int>" que se está compilando
-D:\Downloads\Eternal Loyalty\Game\Source\Point.h(111,15): warning C4244: 'return': conversión de 'float' a 'TYPE'; posible pérdida de datos
-          with
-          [
-              TYPE=int
-          ]
-  PerfTimer.cpp
-  Physics.cpp
-D:\Downloads\Eternal Loyalty\Game\Source\Physics.cpp(99,23): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
-D:\Downloads\Eternal Loyalty\Game\Source\Physics.cpp(100,25): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
-D:\Downloads\Eternal Loyalty\Game\Source\Physics.cpp(136,25): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
-D:\Downloads\Eternal Loyalty\Game\Source\Physics.cpp(137,26): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
-D:\Downloads\Eternal Loyalty\Game\Source\Physics.cpp(194,21): warning C4018: '<': no coinciden signed/unsigned
-D:\Downloads\Eternal Loyalty\Game\Source\Physics.cpp(385,13): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
-D:\Downloads\Eternal Loyalty\Game\Source\Physics.cpp(386,13): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
-D:\Downloads\Eternal Loyalty\Game\Source\Physics.cpp(392,27): warning C4244: 'return': conversión de 'float32' a 'int'; posible pérdida de datos
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: El directorio Output no termina con una barra diagonal final. Esta instancia de compilación agregará la barra diagonal porque es necesaria para que se pueda evaluar correctamente el directorio Output.
   Player.cpp
-D:\Downloads\Eternal Loyalty\Game\Source\Player.cpp(88,20): warning C4244: '=': conversión de 'double' a 'float32'; posible pérdida de datos
-D:\Downloads\Eternal Loyalty\Game\Source\Player.cpp(90,22): warning C4244: '=': conversión de 'double' a 'float32'; posible pérdida de datos
-D:\Downloads\Eternal Loyalty\Game\Source\Player.cpp(101,20): warning C4244: '=': conversión de 'double' a 'float32'; posible pérdida de datos
-D:\Downloads\Eternal Loyalty\Game\Source\Player.cpp(103,22): warning C4244: '=': conversión de 'double' a 'float32'; posible pérdida de datos
-D:\Downloads\Eternal Loyalty\Game\Source\Player.cpp(126,16): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-D:\Downloads\Eternal Loyalty\Game\Source\Player.cpp(137,22): warning C4244: '=': conversión de 'double' a 'float32'; posible pérdida de datos
-D:\Downloads\Eternal Loyalty\Game\Source\Player.cpp(141,21): warning C4244: '=': conversión de 'double' a 'float32'; posible pérdida de datos
-  Scene.cpp
-D:\Downloads\Eternal Loyalty\Game\Source\Scene.cpp(83,33): warning C4018: '<': no coinciden signed/unsigned
-  Render.cpp
-D:\Downloads\Eternal Loyalty\Game\Source\Render.cpp(262,45): warning C4244: '=': conversión de 'double' a 'int'; posible pérdida de datos
-D:\Downloads\Eternal Loyalty\Game\Source\Render.cpp(263,45): warning C4244: '=': conversión de 'double' a 'int'; posible pérdida de datos
-  Textures.cpp
-  Timer.cpp
-  Window.cpp
-  Log.cpp
-  pugixml.cpp
-  Generando código...
-  Game.vcxproj -> D:\Downloads\Eternal Loyalty\Build\Debug\Game.exe
+C:\Users\Usuari\Documents\GitHub\EternalLoyalty\Game\Source\Player.cpp(102,22): warning C4244: '=': conversión de 'double' a 'float32'; posible pérdida de datos
+C:\Users\Usuari\Documents\GitHub\EternalLoyalty\Game\Source\Player.cpp(104,23): warning C4244: '=': conversión de 'double' a 'float32'; posible pérdida de datos
+C:\Users\Usuari\Documents\GitHub\EternalLoyalty\Game\Source\Player.cpp(115,21): warning C4244: '=': conversión de 'double' a 'float32'; posible pérdida de datos
+C:\Users\Usuari\Documents\GitHub\EternalLoyalty\Game\Source\Player.cpp(117,23): warning C4244: '=': conversión de 'double' a 'float32'; posible pérdida de datos
+C:\Users\Usuari\Documents\GitHub\EternalLoyalty\Game\Source\Player.cpp(140,17): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\Usuari\Documents\GitHub\EternalLoyalty\Game\Source\Player.cpp(151,23): warning C4244: '=': conversión de 'double' a 'float32'; posible pérdida de datos
+C:\Users\Usuari\Documents\GitHub\EternalLoyalty\Game\Source\Player.cpp(155,22): warning C4244: '=': conversión de 'double' a 'float32'; posible pérdida de datos
+C:\Users\Usuari\Documents\GitHub\EternalLoyalty\Game\Source\Player.cpp(235,27): warning C4244: '+=': conversión de 'double' a 'TYPE'; posible pérdida de datos
+          with
+          [
+              TYPE=int
+          ]
+C:\Users\Usuari\Documents\GitHub\EternalLoyalty\Game\Source\Player.cpp(238,26): warning C4244: '+=': conversión de 'double' a 'TYPE'; posible pérdida de datos
+          with
+          [
+              TYPE=int
+          ]
+C:\Users\Usuari\Documents\GitHub\EternalLoyalty\Game\Source\Player.cpp(241,27): warning C4244: '+=': conversión de 'double' a 'TYPE'; posible pérdida de datos
+          with
+          [
+              TYPE=int
+          ]
+C:\Users\Usuari\Documents\GitHub\EternalLoyalty\Game\Source\Player.cpp(244,26): warning C4244: '+=': conversión de 'double' a 'TYPE'; posible pérdida de datos
+          with
+          [
+              TYPE=int
+          ]
+C:\Users\Usuari\Documents\GitHub\EternalLoyalty\Game\Source\Player.cpp(247,17): warning C4018: '>': no coinciden signed/unsigned
+  Game.vcxproj -> C:\Users\Usuari\Documents\GitHub\EternalLoyalty\Build\Debug\Game.exe
           1 archivo(s) copiado(s).

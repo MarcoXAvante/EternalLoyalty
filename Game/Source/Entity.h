@@ -10,6 +10,7 @@ enum class EntityType
 {
 	PLAYER,
 	ITEM,
+	ENEMY,
 	UNKNOWN
 };
 
@@ -87,6 +88,7 @@ public:
 	iPoint position;       
 	iPoint initialPos;
 	bool renderable = true;
+	bool removable = false;
 };
 
 #endif // __ENTITY_H__

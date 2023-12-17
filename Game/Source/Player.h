@@ -27,6 +27,10 @@ public:
 	// L07 DONE 6: Define OnCollision function for the player. 
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
+	int getPlayerTileX();
+
+	int getPlayerTileY();
+
 public:
 
 	//L02: DONE 2: Declare player parameters

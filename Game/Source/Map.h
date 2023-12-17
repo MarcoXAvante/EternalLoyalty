@@ -9,6 +9,8 @@
 #include "PugiXml\src\pugixml.hpp"
 #include "Pathfinding.h"
 
+#include "PugiXml\src\pugixml.hpp"
+
 // L05: DONE 2: Create a struct to hold information for a TileSet
 // Ignore Terrain Types and Tile Types for now, but we want the image!
 struct TileSet
@@ -128,13 +130,21 @@ public:
     // L06: DONE 8: Create a method that translates x,y coordinates from map positions to world positions
     iPoint MapToWorld(int x, int y) const;
 
+    // L13: Create navigation map for pathfinding
+    void CreateNavigationMap(int& width, int& height, uchar** buffer) const;
+
     // L08: DONE 2: Implement function to the Tileset based on a tile id
     TileSet* GetTilesetFromTileId(int gid) const;
     int getMapHeght() { return mapData.height * mapData.tileheight; }      
     int getMapWidth() { return mapData.width * mapData.tilewidth; }
+    int getTileWidth() { return mapData.tilewidth; }
+    int getTileHieght() { return mapData.tileheight; }
 
     // L06: DONE 6: Load a group of properties 
     bool LoadProperties(pugi::xml_node& node, Properties& properties);
+
+    // L09: DONE 5: Add method WorldToMap to obtain  map coordinates from screen coordinates 
+    iPoint WorldToMap(int x, int y);
 
 public: 
     p2List<PhysBody*> colliders;
@@ -146,9 +156,7 @@ private:
     // L05: DONE 1: Declare a variable data of the struct MapData
     MapData mapData;
     bool mapLoaded;
+    MapLayer* navigationLayer;
+    int blockedGid = 698;
 };
-
-
-
-
 #endif // __MAP_H__

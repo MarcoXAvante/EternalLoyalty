@@ -1,27 +1,54 @@
 <!-- Config file for the game -->
 <!-- L01: DONE 1: Create configuration file-->
+<!-- Config file for the game -->
+<!-- L01: DONE 1: Create configuration file-->
 <config>
-  <app>
-    <title>My video game</title>
-    <maxFrameDuration value="16"/>
-  </app>
+	<app>
+		<title>Eternal Loyalty</title>
+		<maxFrameDuration value="16"/>
+	</app>
 
-  <renderer>
-    <vsync value="false"/>
-  </renderer>
+	<renderer>
+		<vsync value="false"/>
+	</renderer>
 
-  <window>
-    <resolution width="1140" height="640" scale="2"/>
-    <fullscreen value="false"/>
-    <borderless value="false"/>
-    <resizable value="false"/>
-    <fullscreen_window value="false"/>
-  </window>
+	<window>
+		<resolution width="1140" height="640" scale="2"/>
+		<fullscreen value="false"/>
+		<borderless value="false"/>
+		<resizable value="false"/>
+		<fullscreen_window value="false"/>
+	</window>
 
-  <scene>
-    <player x="64" y="208" texturePath="Assets/Textures/Perrete/Animacion perrete.png" coinfxpath="Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg"/>
-    <map path="Assets/Maps/" name="mapa.tmx"/>
-	<music path="Assets/Audio/Music/level1.wav" />
-  </scene>
-  
+	<scene>
+		<player x="64" y="208" texturePath="Assets/Textures/Perrete/Animacion perrete.png" coinfxpath="Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg">
+			<animations>
+				<idledog loop="true" speed="0.1f">
+					<idle x="10" y="7" w="46" h="37"/>
+				</idledog>
+				<walkingdog loop="true" speed="0.20f">
+					<walk x="60" y="58" w="46" h="37"/>
+					<walk x="117" y="58" w="46" h="37"/>
+					<walk x="175" y="58" w="46" h="37"/>
+					<walk x="226" y="58" w="46" h="37"/>
+					<walk x="276" y="58" w="46" h="37"/>
+					<walk x="335" y="58" w="46" h="37"/>
+				</walkingdog>
+				<diedog loop="false" speed="0.10f">
+					<die x="60" y="7" w="46" h="37"/>
+					<die x="115" y="7" w="46" h="37"/>
+					<die x="169" y="7" w="46" h="37"/>
+				</diedog>
+				<jumpdog loop="true" speed="0.20f">
+					<jump x="58" y="106" w="46" h="37"/>
+					<jump x="115" y="106" w="46" h="37"/>
+					<jump x="171" y="106" w="46" h="37"/>
+					<jump x="228" y="106" w="46" h="37"/>
+				</jumpdog>
+			</animations>
+		</player>
+		<map path="Assets/Maps/" name="mapa.tmx"/>
+		<music path="Assets/Audio/Music/level1.wav" />
+	</scene>
+
 </config>

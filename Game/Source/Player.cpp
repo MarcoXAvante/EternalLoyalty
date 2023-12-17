@@ -8,29 +8,13 @@
 #include "Log.h"
 #include "Point.h"
 #include "Physics.h"
+#include "Map.h"
+#include "Window.h"
 #include <iostream>
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
 	name.Create("Player");
-	idleDog.PushBack({ 10, 7, 46, 37 });
-	dieDog.PushBack({ 60, 7, 46, 37});
-	dieDog.PushBack({ 115, 7, 46, 37});
-	dieDog.PushBack({ 169, 7, 46, 37});
-	dieDog.loop = false;
-	dieDog.speed = 0.10f;
-	walkingDog.PushBack({60, 58, 46, 37});
-	walkingDog.PushBack({117, 58, 46, 37});
-	walkingDog.PushBack({175, 58, 46, 37});
-	walkingDog.PushBack({226, 58, 46, 37});
-	walkingDog.PushBack({276, 58, 46, 37});
-	walkingDog.PushBack({335, 58, 46, 37});
-	walkingDog.speed = 0.20f;
-	jumpDog.PushBack({58, 106, 46, 37});
-	jumpDog.PushBack({115, 106, 46, 37});
-	jumpDog.PushBack({171, 106, 46, 37});
-	jumpDog.PushBack({228, 106, 46, 37});
-	jumpDog.speed = 0.20f;
 }
 
 Player::~Player() {
@@ -42,6 +26,36 @@ bool Player::Awake() {
 	//L03: DONE 2: Initialize Player parameters
 	initialPos = iPoint(config.attribute("x").as_int(), config.attribute("y").as_int());
 	position = initialPos;
+
+	idleDog.loop = config.child("animations").child("idledog").attribute("loop").as_bool();
+	idleDog.speed = config.child("animations").child("idledog").attribute("speed").as_float();
+
+	for (pugi::xml_node animNode = config.child("animations").child("idledog").child("idle"); animNode != NULL; animNode = animNode.next_sibling("idle")) {
+		idleDog.PushBack({ animNode.attribute("x").as_int(), animNode.attribute("y").as_int() ,animNode.attribute("w").as_int() ,animNode.attribute("h").as_int() });
+	}
+
+	walkingDog.loop = config.child("animations").child("walkingdog").attribute("loop").as_bool();
+	walkingDog.speed = config.child("animations").child("walkingdog").attribute("speed").as_float();
+
+	for (pugi::xml_node animNode = config.child("animations").child("walkingdog").child("walk"); animNode != NULL; animNode = animNode.next_sibling("walk")) {
+		walkingDog.PushBack({ animNode.attribute("x").as_int(), animNode.attribute("y").as_int() ,animNode.attribute("w").as_int() ,animNode.attribute("h").as_int() });
+	}
+
+	dieDog.loop = config.child("animations").child("diedog").attribute("loop").as_bool();
+	dieDog.speed = config.child("animations").child("diedog").attribute("speed").as_float();
+
+	for (pugi::xml_node animNode = config.child("animations").child("diedog").child("die"); animNode != NULL; animNode = animNode.next_sibling("die")) {
+		dieDog.PushBack({ animNode.attribute("x").as_int(), animNode.attribute("y").as_int() ,animNode.attribute("w").as_int() ,animNode.attribute("h").as_int() });
+	}
+
+	jumpDog.loop = config.child("animations").child("jumpdog").attribute("loop").as_bool();
+	jumpDog.speed = config.child("animations").child("jumpdog").attribute("speed").as_float();
+
+	for (pugi::xml_node animNode = config.child("animations").child("jumpdog").child("jump"); animNode != NULL; animNode = animNode.next_sibling("jump")) {
+		jumpDog.PushBack({ animNode.attribute("x").as_int(), animNode.attribute("y").as_int() ,animNode.attribute("w").as_int() ,animNode.attribute("h").as_int() });
+	}
+
+
 	return true;
 }
 
@@ -83,72 +97,82 @@ bool Player::Update(float dt)
 	}
 
 	currentAnimation->Update();
-
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		velocity.x = -0.3*dt;
-		if (remainingJumpSteps == 0 && grounded) {
-			velocity.y = 0.01 * dt;
+	if (!dead) {
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+			velocity.x = -0.3 * dt;
+			if (remainingJumpSteps == 0 && grounded) {
+				velocity.y = 0.01 * dt;
+			}
+			currentAnimation = &walkingDog;
+			flip = true;
 		}
-		currentAnimation = &walkingDog;
-		flip = true;
-	}
 
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_UP) {
-		currentAnimation = &idleDog;
-	}
-
-	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		velocity.x = 0.3 *dt;
-		if (remainingJumpSteps == 0 && grounded) {
-			velocity.y = 0.01 * dt;
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_UP) {
+			currentAnimation = &idleDog;
 		}
-		currentAnimation = &walkingDog;
-		flip = false;
-	}
 
-	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_UP) {
-		currentAnimation = &idleDog;
-	}
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+			velocity.x = 0.3 * dt;
+			if (remainingJumpSteps == 0 && grounded) {
+				velocity.y = 0.01 * dt;
+			}
+			currentAnimation = &walkingDog;
+			flip = false;
+		}
 
-	if (!god) {
-		if (pbody->body->GetContactList() != NULL) {
-			if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)// && pbody->listener->OnCollision())
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_UP) {
+			currentAnimation = &idleDog;
+		}
+
+		if (!god) {
+			if (pbody->body->GetContactList() != NULL) {
+				if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)// && pbody->listener->OnCollision())
+				{
+					remainingJumpSteps = maxJumpSteps; //  1/10th of a second at 60Hz
+					jumpForceReduce = 0;
+				}
+			}
+
+			if (remainingJumpSteps > 0)
 			{
-				remainingJumpSteps = maxJumpSteps; //  1/10th of a second at 60Hz
-				jumpForceReduce = 0;
+				//to change velocity by 10 in one time step
+				pbody->body->SetLinearDamping(0.1f);
+				float force = pbody->body->GetMass() * 10 / (1 / 30.0); //f = mv/t
+				force /= 4.0;	//spread this over 6 time steps
+				force -= jumpForceReduce;
+
+				jumpForceReduce = (maxJumpSteps - remainingJumpSteps);
+				pbody->body->ApplyForce(b2Vec2(0, -(force * dt)), pbody->body->GetWorldCenter(), true);
+				remainingJumpSteps--;
 			}
 		}
-
-		if (remainingJumpSteps > 0)
-		{
-			//to change velocity by 10 in one time step
-			pbody->body->SetLinearDamping(0.1f);
-			float force = pbody->body->GetMass() * 10 / (1 / 30.0); //f = mv/t
-			force /= 4.0;	//spread this over 6 time steps
-			force -= jumpForceReduce;
-
-			jumpForceReduce = (maxJumpSteps - remainingJumpSteps);
-			pbody->body->ApplyForce(b2Vec2(0, -(force * dt)), pbody->body->GetWorldCenter(), true);
-			remainingJumpSteps--;
+		else {
+			if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+				velocity.y = -0.2 * dt;
+				currentAnimation = &walkingDog;
+			}
+			if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+				velocity.y = 0.2 * dt;
+				currentAnimation = &walkingDog;
+			}
 		}
 	}
 	else {
-		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-			velocity.y = -0.2 * dt;
-			currentAnimation = &walkingDog;
-		}
-		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-			velocity.y = 0.2 * dt;
-			currentAnimation = &walkingDog;
-		}
+		currentAnimation = &dieDog;
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
 		pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(initialPos.x), PIXEL_TO_METERS(initialPos.y)), pbody->body->GetAngle());
 		position = initialPos;
 
+		if (dead) {
+			dead = false;
+		}
+
 		app->render->camera.y = ((position.y - texH / 2) - (app->scene->windowH / 2)) * -1;
 		app->render->camera.x = ((position.x - texW / 2) - (app->scene->windowW / 2)) * -1;
+
+		currentAnimation = &idleDog;
 
 		if (app->render->camera.x >= 0) {
 			app->render->camera.x = 0;
@@ -163,6 +187,12 @@ bool Player::Update(float dt)
 		pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(initialPos.x), PIXEL_TO_METERS(initialPos.y)), pbody->body->GetAngle());
 		position = initialPos;
 
+		if (dead) {
+			dead = false;
+		}
+
+		currentAnimation = &idleDog;
+
 		app->render->camera.y = ((position.y - texH / 2) - (app->scene->windowH / 2)) * -1;
 		app->render->camera.x = ((position.x - texW / 2) - (app->scene->windowW / 2)) * -1;
 
@@ -175,18 +205,49 @@ bool Player::Update(float dt)
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) {
-		god = !god;
+		if (!god) {
+			god = true;
+		}
+		else {
+			god = false;
+			position.x += (46 / 2);
+			position.y += (37 / 2);
+			b2Vec2 pPosition = b2Vec2(PIXEL_TO_METERS(position.x), PIXEL_TO_METERS(position.y));
+			pbody->body->SetTransform(pPosition, 0);
+		}
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
-		dieDog.Reset();
-		currentAnimation = &dieDog;
+		if (!dead) {
+			dieDog.Reset();
+		}
+		dead = !dead;
 	}
 
 	pbody->body->SetLinearVelocity(velocity);
-	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.x = METERS_TO_PIXELS(pbodyPos.p.x) - 48 / 2;
-	position.y = METERS_TO_PIXELS(pbodyPos.p.y) - 32 / 2;
+	if (!god) {
+		b2Transform pbodyPos = pbody->body->GetTransform();
+		position.x = METERS_TO_PIXELS(pbodyPos.p.x) - 48 / 2;
+		position.y = METERS_TO_PIXELS(pbodyPos.p.y) - 32 / 2;
+	}
+	else {
+		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+			position.y += -0.2 * dt;
+		}
+		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+			position.y += 0.2 * dt;
+		}
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+			position.x += -0.3 * dt;
+		}
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+			position.x += 0.3 * dt;
+		}
+	}
+	if (position.y > app->win->height/2 - 32 && position.y > 0) {
+		dead = true;
+		position.y = app->win->height / 2 - 32;
+	}
 	app->render->DrawTextureDX(texture, position.x, position.y, flip, &currentAnimation->GetCurrentFrame());
 
 	return true;
@@ -212,7 +273,19 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;
+	case ColliderType::ENEMY:
+		dead = true;
 	default:
 		break;
 	}
+}
+
+int Player::getPlayerTileX()
+{
+	return (position.x + (currentAnimation->GetCurrentFrame().w / 2)) / app->map->getTileWidth();
+}
+
+int Player::getPlayerTileY()
+{
+	return (position.y + (currentAnimation->GetCurrentFrame().h / 2)) / app->map->getTileHieght();
 }
