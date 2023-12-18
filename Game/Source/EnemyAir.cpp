@@ -181,7 +181,9 @@ void EnemyAir::OnCollision(PhysBody* physA, PhysBody* physB)
 	case ColliderType::BARK:
 		hit = true;
 		currentAnimation = &dieAir;
-		app->audio->PlayFx(deathFX);
+		if (!dead) {
+			app->audio->PlayFx(deathFX);
+		}
 		break;
 	default:
 		break;

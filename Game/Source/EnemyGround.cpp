@@ -153,13 +153,17 @@ void EnemyGround::OnCollision(PhysBody* physA, PhysBody* physB)
 		hit = true;
 		velocity.x = 0;
 		currentAnimation = &dieGround;
-		app->audio->PlayFx(deathFX);
+		if (!dead) {
+			app->audio->PlayFx(deathFX);
+		}
 		break;
 	case ColliderType::DEADLY:
 		hit = true;
 		velocity.x = 0;
 		currentAnimation = &dieGround;
-		app->audio->PlayFx(deathFX);
+		if (!dead) {
+			app->audio->PlayFx(deathFX);
+		}
 		break;
 	case ColliderType::PLATFORM:
 		break;
