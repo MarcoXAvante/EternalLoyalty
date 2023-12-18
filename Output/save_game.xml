@@ -9,14 +9,14 @@
 	<:anonymous />
 	<entitymanager>
 		<entities>
-			<player x="491" y="224" />
+			<player x="467" y="224" />
 			<enemy x="3984" y="208" dead="false" />
-			<enemy x="559" y="191" dead="true" />
-			<enemy x="1317" y="156" dead="false" />
+			<enemy x="591" y="190" dead="false" />
+			<enemy x="1205" y="155" dead="false" />
 			<enemy x="2432" y="96" dead="false" />
 		</entities>
 	</entitymanager>
 	<renderer>
-		<camera x="-412" y="0" />
+		<camera x="-364" y="0" />
 	</renderer>
 </game_state>

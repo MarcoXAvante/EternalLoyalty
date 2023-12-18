@@ -33,7 +33,7 @@ The game is about a dog trying to arrive to his owner. To do so, he will adventu
  - F6 to load snapshot.
  - F9 toggle debug.
  - F10 God mode.
- - While in god mode, W to move up and S to move down.
+ - While in god mode, W to move up and S to move down. Jump is disabled.
 
 ## Developers
 

@@ -53,13 +53,6 @@ bool Enemy::Update(float dt)
 
  	currentAnimation->Update();
 	
-	if (dead)
-	{
-		removable = true;
-		// mirar de borrar texture i memory leaks
-		//app->entityManager->DestroyEntity(this);
-	}
-
 	return true;
 }
 
