@@ -333,6 +333,7 @@ int Player::getPlayerTileY()
 bool Player::LoadState(pugi::xml_node &node) {
 	this->position.x = node.attribute("x").as_int();
 	this->position.y = node.attribute("y").as_int();
+	this->dead = node.attribute("dead").as_bool();
 	b2Vec2 pPosition = b2Vec2(PIXEL_TO_METERS(position.x), PIXEL_TO_METERS(position.y));
 	pbody->body->SetTransform(pPosition, 0);
 

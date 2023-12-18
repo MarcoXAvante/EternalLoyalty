@@ -173,6 +173,7 @@ bool EntityManager::SaveState(pugi::xml_node node) {
 		case EntityType::PLAYER:
 			entityNode.append_child("player").append_attribute("x").set_value(pEntity->position.x);
 			entityNode.child("player").append_attribute("y").set_value(pEntity->position.y);
+			entityNode.child("player").append_attribute("dead").set_value(pEntity->dead);
 			break;
 		case EntityType::ENEMY:
 			enemyNode = entityNode.append_child("enemy");

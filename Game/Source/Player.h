@@ -43,7 +43,6 @@ public:
 	pugi::xml_node config;
 	uint texW, texH;
 	bool god = false;
-	bool dead = false;
 
 
 	Animation walkingDog;
