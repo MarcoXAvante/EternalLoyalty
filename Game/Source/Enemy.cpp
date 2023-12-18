@@ -154,6 +154,5 @@ bool Enemy::LoadState(pugi::xml_node& node) {
 	b2Vec2 pPosition = b2Vec2(PIXEL_TO_METERS(position.x), PIXEL_TO_METERS(position.y));
 	pbody->body->SetTransform(pPosition, 0);
 
-	node = node.next_sibling("enemy");
 	return true;
 };

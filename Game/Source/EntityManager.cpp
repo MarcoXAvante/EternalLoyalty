@@ -150,6 +150,7 @@ bool EntityManager::LoadState(pugi::xml_node node) {
 		}
 		else if (item->data->type == EntityType::ENEMY) {
 			item->data->LoadState(enemyNode);
+			enemyNode = enemyNode.next_sibling("enemy");
 		}
 	}
 	

@@ -1,4 +1,6 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: El directorio Output no termina con una barra diagonal final. Esta instancia de compilación agregará la barra diagonal porque es necesaria para que se pueda evaluar correctamente el directorio Output.
   Enemy.cpp
+  EntityManager.cpp
+  Generando código...
   Game.vcxproj -> C:\Users\Usuari\Documents\GitHub\EternalLoyalty\Build\Debug\Game.exe
           1 archivo(s) copiado(s).
