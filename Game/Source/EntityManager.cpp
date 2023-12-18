@@ -178,7 +178,7 @@ bool EntityManager::SaveState(pugi::xml_node node) {
 			enemyNode = entityNode.append_child("enemy");
 			enemyNode.append_attribute("x").set_value(pEntity->position.x);
 			enemyNode.append_attribute("y").set_value(pEntity->position.y);
-
+			enemyNode.append_attribute("dead").set_value(pEntity->dead);
 			break;
 		default:
 			break;

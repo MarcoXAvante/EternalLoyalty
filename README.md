@@ -4,15 +4,18 @@
 
 Platform game delevoped for a subject in the career of Programming and Desing in videogmaes - UPC. 
 
-The game is about a dog trying to arrive to his owner.
+The game is about a dog trying to arrive to his owner. To do so, he will adventure through a perilous mountain range.
 
 ## Key Features
 
  - Jumps.
- - Fall into the void.
- - Kind of flying.
+ - Die when falling.
+ - God mode.
  - Go forwards and backwards.
  - Animations.
+ - Enemies and pathfinding.
+ - Saving and loading.
+ - Bark attack.
  - Colliders.
  - Die.
  - Textures.
@@ -22,17 +25,21 @@ The game is about a dog trying to arrive to his owner.
  - A to move left.
  - D to move right.
  - SPACE to jump.
+ - Q to bark.
  - F1 to go back to start
  - F3 to go back to start
- - F4 to die and trigger die animation.
+ - F4 to die and trigger die animation, or revive if you're dead.
+ - F5 to save snapshot.
+ - F6 to load snapshot.
  - F9 toggle debug.
  - F10 God mode.
+ - While in god mode, W to move up and S to move down.
 
 ## Developers
 
  - Marc Avante - Programer and developer.
  - Andrea Doña - Art disegner and level designer.
- - Both taking the roll of management.
+ - Both taking the role of management.
 
 ## Github Link
 

@@ -74,11 +74,16 @@ bool Player::Start() {
 	app->tex->GetSize(texture, texW, texH);
 	pbody = app->physics->CreateCircle(initialPos.x, initialPos.y, 16, bodyType::DYNAMIC);
 	pbody->body->SetFixedRotation(true);
+	bark = app->physics->CreateRectangleSensor(0, 0, 34, 50, bodyType::DYNAMIC);
+	bark->listener = this;
 	// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	pbody->listener = this;
 
 	// L07 DONE 7: Assign collider type
 	pbody->ctype = ColliderType::PLAYER;
+	bark->ctype = ColliderType::BARK;
+	bark->body->SetLinearVelocity({ 0,0 });
+	bark->body->SetGravityScale(0);
 
 	//initialize audio effect
 	pickCoinFxId = app->audio->LoadFx(config.attribute("coinfxpath").as_string());
@@ -132,7 +137,7 @@ bool Player::Update(float dt)
 		}
 
 		if (!god) {
-			if (pbody->body->GetContactList() != NULL) {
+			if (pbody->body->GetContactList() != NULL && grounded) {
 				if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)// && pbody->listener->OnCollision())
 				{
 					remainingJumpSteps = maxJumpSteps; //  1/10th of a second at 60Hz
@@ -168,12 +173,24 @@ bool Player::Update(float dt)
 		if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN) {
 			attackDog.Reset();
 			app->audio->PlayFx(barkFX);
-			currentAnimation = &attackDog;
+			currentAnimation = &attackDog; 
+			b2Vec2 bPosition;
+			if (flip){
+				bPosition = b2Vec2(PIXEL_TO_METERS(position.x), PIXEL_TO_METERS(position.y));
+			}
+			else {
+				bPosition = b2Vec2(PIXEL_TO_METERS(position.x + 1), PIXEL_TO_METERS(position.y));
+			}
+			bark->body->SetTransform(bPosition, 0);
 
 		}
 	}
 	else {
 		currentAnimation = &dieDog;
+	}
+
+	if (attackDog.HasFinished()) {
+		bark->body->SetTransform({ 0,0 }, 0);
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
@@ -291,7 +308,13 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Collision UNKNOWN");
 		break;
 	case ColliderType::ENEMY:
-		dead = true;
+		if (physA == pbody) {
+			dead = true;
+		}
+		break;
+	case ColliderType::BARK:
+		grounded = false;
+		break;
 	default:
 		break;
 	}

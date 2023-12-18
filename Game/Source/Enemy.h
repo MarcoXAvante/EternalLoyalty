@@ -62,7 +62,6 @@ protected:
 	float chaseVelovity;
 	float patrolVelocity;
 	bool right;
-	bool dead;
 	bool hit;	
 	bool flip;
 

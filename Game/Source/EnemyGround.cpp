@@ -77,7 +77,7 @@ bool EnemyGround::Update(float dt)
 	}
 	else {
 		grounded = true;
-		position.y -= 0.01;
+		//position.y -= 0.01;
 	}
 
 	if (!hit) {
@@ -118,13 +118,13 @@ void EnemyGround::moveToPlayer(float dt)
 		//check if it shall move to x
 		if (TileX > path->At(1)->x) {
 			velocity.x = -ActualVelocity * dt;
-			if (grounded) {
+			if (grounded && !dead) {
 				velocity.y = -0.001 * dt;
 			}
 		}
 		else {
 			velocity.x = ActualVelocity * dt;
-			if (grounded) {
+			if (grounded && !dead) {
 				velocity.y = -0.001 * dt;
 			}
 		}
@@ -132,13 +132,13 @@ void EnemyGround::moveToPlayer(float dt)
 	else if (path->Count() == 1) {
 		if (app->scene->GetPlayer()->position.x < position.x) {
 			velocity.x = -ActualVelocity * dt;
-			if (grounded) {
+			if (grounded && !dead) {
 				velocity.y = -0.001 * dt;
 			}
 		}
 		else {
 			velocity.x = ActualVelocity * dt;
-			if (grounded) {
+			if (grounded && !dead) {
 				velocity.y = -0.001 * dt;
 			}
 		}
@@ -177,13 +177,13 @@ void EnemyGround::moveToPoint(float dt)
 		//check if it shall move to x
 		if (TileX > path->At(1)->x) {
 			velocity.x = -ActualVelocity * dt;
-			if (grounded) {
+			if (grounded && !dead) {
 				velocity.y = -0.001 * dt;
 			}
 		}
 		else {
 			velocity.x = ActualVelocity * dt;
-			if (grounded) {
+			if (grounded && !dead) {
 				velocity.y = -0.001 * dt;
 			}
 		}
@@ -191,13 +191,13 @@ void EnemyGround::moveToPoint(float dt)
 	else if (path->Count() == 1) {
 		if (app->scene->GetPlayer()->position.x < position.x) {
 			velocity.x = -ActualVelocity * dt;
-			if (grounded) {
+			if (grounded && !dead) {
 				velocity.y = -0.001 * dt;
 			}
 		}
 		else {
 			velocity.x = ActualVelocity * dt;
-			if (grounded) {
+			if (grounded && !dead) {
 				velocity.y = -0.001 * dt;
 			}
 		}
