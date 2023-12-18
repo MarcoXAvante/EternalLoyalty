@@ -46,6 +46,8 @@ public:
 
 	void Patrol();
 
+	bool LoadState(pugi::xml_node& node);
+
 	bool dark;
 
 protected:

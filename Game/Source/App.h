@@ -74,10 +74,24 @@ private:
 	// Call modules after each loop iteration
 	bool PostUpdate();
 
-public:
+	// L14: TODO 1: Declare the methods LoadRequest() and SaveRequest() to request and call the Load / Save the game state at the end of the frame
 
+
+
+	// Reads XML file and loads the data
+	bool LoadFromFile();
+
+	// Sace XML file with modules data
+	bool SaveFromFile();
+
+public:
 	// L03: DONE 1: Add the EntityManager Module to App
 
+// Request a save data in an XML file 
+	bool LoadRequest();
+
+	// Request to load data from XML file 
+	bool SaveRequest();
 	// Modules
 	Window* win;
 	Input* input;
@@ -121,6 +135,9 @@ private:
 
 	//L02 DONE 1: Set the maximun frame duration in miliseconds.
 	uint32 maxFrameDuration = 16;
+
+	bool loadRequest = false;
+	bool saveRequest = false;
 
 };
 

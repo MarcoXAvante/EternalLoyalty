@@ -48,10 +48,10 @@ bool Enemy::Update(float dt)
 		position.y = METERS_TO_PIXELS(pbodyPos.p.y) - (currentAnimation->GetCurrentFrame().h / 2);
 	}
 
-	app->render->DrawTextureDX(texture, position.x, position.y, &currentAnimation->GetCurrentFrame());
+	app->render->DrawTextureDX(texture, position.x, position.y, flip, &currentAnimation->GetCurrentFrame());
 				
 
-	currentAnimation->Update();
+ 	currentAnimation->Update();
 	
 	if (dead)
 	{
@@ -147,3 +147,13 @@ void Enemy::Patrol()
 		}
 	}
 }
+
+bool Enemy::LoadState(pugi::xml_node& node) {
+	this->position.x = node.attribute("x").as_int();
+	this->position.y = node.attribute("y").as_int();
+	b2Vec2 pPosition = b2Vec2(PIXEL_TO_METERS(position.x), PIXEL_TO_METERS(position.y));
+	pbody->body->SetTransform(pPosition, 0);
+
+	node = node.next_sibling("enemy");
+	return true;
+};

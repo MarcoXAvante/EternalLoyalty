@@ -31,6 +31,9 @@ public:
 
 	int getPlayerTileY();
 
+	bool LoadState(pugi::xml_node &node);
+
+
 public:
 
 	//L02: DONE 2: Declare player parameters

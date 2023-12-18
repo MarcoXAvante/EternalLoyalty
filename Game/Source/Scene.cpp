@@ -7,6 +7,8 @@
 #include "Scene.h"
 #include "Map.h"
 #include "Item.h"
+#include "Physics.h"
+#include "Enemy.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -38,6 +40,20 @@ bool Scene::Awake(pugi::xml_node config)
 	app->map->path = config.child("map").attribute("path").as_string();
 
 
+	pugi::xml_node enemyNode = config.child("enemy");
+	//GroundEnemy
+	for (pugi::xml_node groundNode = enemyNode.child("groundenemy"); groundNode; groundNode = groundNode.next_sibling("groundenemy"))
+	{
+		Enemy* GroundEnemy = (Enemy*)app->entityManager->CreateEntity(EntityType::ENEMYGROUND);
+		GroundEnemy->parameters = groundNode;
+	}
+
+	//AirEnemy
+	for (pugi::xml_node airNode = enemyNode.child("airenemy"); airNode; airNode = airNode.next_sibling("airenemy"))
+	{
+		Enemy* AirEnemy = (Enemy*)app->entityManager->CreateEntity(EntityType::ENEMYAIR);
+		AirEnemy->parameters = airNode;
+	}
 
 	// iterate all items in the scene
 	// Check https://pugixml.org/docs/quickstart.html#access
@@ -109,6 +125,13 @@ bool Scene::Update(float dt)
 	*/
 	// Renders the image in the center of the screen 
 	//app->render->DrawTexture(img, (int)textPosX, (int)textPosY);
+
+	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) {
+		app->SaveRequest();
+	};
+	if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
+		app->LoadRequest();
+	};
 
 	return true;
 }

@@ -173,6 +173,7 @@ bool Player::Update(float dt)
 		app->render->camera.x = ((position.x - texW / 2) - (app->scene->windowW / 2)) * -1;
 
 		currentAnimation = &idleDog;
+		dieDog.Reset();
 
 		if (app->render->camera.x >= 0) {
 			app->render->camera.x = 0;
@@ -192,6 +193,7 @@ bool Player::Update(float dt)
 		}
 
 		currentAnimation = &idleDog;
+		dieDog.Reset();
 
 		app->render->camera.y = ((position.y - texH / 2) - (app->scene->windowH / 2)) * -1;
 		app->render->camera.x = ((position.x - texW / 2) - (app->scene->windowW / 2)) * -1;
@@ -222,6 +224,10 @@ bool Player::Update(float dt)
 			dieDog.Reset();
 		}
 		dead = !dead;
+	}
+
+	if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN) {
+
 	}
 
 	pbody->body->SetLinearVelocity(velocity);
@@ -289,3 +295,12 @@ int Player::getPlayerTileY()
 {
 	return (position.y + (currentAnimation->GetCurrentFrame().h / 2)) / app->map->getTileHieght();
 }
+
+bool Player::LoadState(pugi::xml_node &node) {
+	this->position.x = node.attribute("x").as_int();
+	this->position.y = node.attribute("y").as_int();
+	b2Vec2 pPosition = b2Vec2(PIXEL_TO_METERS(position.x), PIXEL_TO_METERS(position.y));
+	pbody->body->SetTransform(pPosition, 0);
+
+	return true;
+};

@@ -1,5 +1,7 @@
 #include "EntityManager.h"
 #include "Player.h"
+#include "EnemyGround.h"
+#include "EnemyAir.h"
 #include "Item.h"
 #include "App.h"
 #include "Textures.h"
@@ -89,6 +91,12 @@ Entity* EntityManager::CreateEntity(EntityType type)
 	case EntityType::ITEM:
 		entity = new Item();
 		break;
+	case EntityType::ENEMYGROUND:
+		entity = new EnemyGround();
+		break;
+	case EntityType::ENEMYAIR:
+		entity = new EnemyAir();
+		break;
 	default:
 		break;
 	}
@@ -128,4 +136,54 @@ bool EntityManager::Update(float dt)
 	}
 
 	return ret;
+}
+
+bool EntityManager::LoadState(pugi::xml_node node) {
+
+	pugi::xml_node entityNode = node.child("entities");
+	pugi::xml_node enemyNode;
+	ListItem<Entity*>* item;
+	enemyNode = entityNode.child("enemy");
+	for (item = entities.start; item != NULL; item = item->next) {
+		if (item->data->type == EntityType::PLAYER) {
+			item->data->LoadState(entityNode.child("player"));
+		}
+		else if (item->data->type == EntityType::ENEMY) {
+			item->data->LoadState(enemyNode);
+		}
+	}
+	
+
+	return true;
+}
+
+bool EntityManager::SaveState(pugi::xml_node node) {
+
+	pugi::xml_node entityNode = node.append_child("entities");
+	pugi::xml_node enemyNode;
+	ListItem<Entity*>* item;
+	Entity* pEntity = NULL;
+
+	for (item = entities.start; item != NULL; item = item->next) {
+		pEntity = item->data;
+		
+		switch (pEntity->type)
+		{
+		case EntityType::PLAYER:
+			entityNode.append_child("player").append_attribute("x").set_value(pEntity->position.x);
+			entityNode.child("player").append_attribute("y").set_value(pEntity->position.y);
+			break;
+		case EntityType::ENEMY:
+			enemyNode = entityNode.append_child("enemy");
+			enemyNode.append_attribute("x").set_value(pEntity->position.x);
+			enemyNode.append_attribute("y").set_value(pEntity->position.y);
+
+			break;
+		default:
+			break;
+		}
+	}
+
+
+	return true;
 }
