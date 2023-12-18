@@ -17,5 +17,6 @@ public:
 	Animation idleAir;
 	Animation flyingAir;
 	Animation dieAir;
+	int deathFX;
 };
 

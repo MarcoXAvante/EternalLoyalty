@@ -51,7 +51,7 @@
 		<music path="Assets/Audio/Music/level1.wav" />
 
 		<enemy>
-			<airenemy x="1264" y="104" texturepath="Assets/Textures/Enemigos/png sprites.png" dest1X="73" dest1Y="10" dest2X="79" dest2Y="8">
+			<airenemy x="1264" y="104" texturepath="Assets/Textures/Enemigos/png sprites.png" deathfxpath="Assets/Audio/Fx/bird.wav" dest1X="73" dest1Y="10" dest2X="79" dest2Y="8">
 				<animations>
 					<idleair loop="true" speed="0.1f">
 						<idle x="0" y="103" w="17" h="15"/>
@@ -71,7 +71,7 @@
 					</dieair>
 				</animations>
 			</airenemy>
-			<airenemy x="2432" y="96" texturepath="Assets/Textures/Enemigos/png sprites.png" dest1X="151" dest1Y="1" dest2X="153" dest2Y="7">
+			<airenemy x="2432" y="96" texturepath="Assets/Textures/Enemigos/png sprites.png" deathfxpath="Assets/Audio/Fx/bird.wav" dest1X="151" dest1Y="1" dest2X="153" dest2Y="7">
 				<animations>
 					<idleair loop="true" speed="0.1f">
 						<idle x="0" y="103" w="17" h="15"/>
@@ -91,7 +91,7 @@
 					</dieair>
 				</animations>
 			</airenemy>
-			<groundenemy x="3984" y="208" texturepath="Assets/Textures/Enemigos/png sprites.png" dest1X="246" dest1Y="14" dest2X="267" dest2Y="13">
+			<groundenemy x="3984" y="208" texturepath="Assets/Textures/Enemigos/png sprites.png" deathfxpath="Assets/Audio/Fx/rat.wav" dest1X="246" dest1Y="14" dest2X="267" dest2Y="13">
 				<animations>
 					<idleground loop="true" speed="0.1f">
 						<idle x="0" y="0" w="32" h="13"/>
@@ -113,7 +113,7 @@
 					</dieground>
 				</animations>
 			</groundenemy>
-			<groundenemy x="576" y="192" texturepath="Assets/Textures/Enemigos/png sprites.png" dest1X="34" dest1Y="12" dest2X="44" dest2Y="12">
+			<groundenemy x="576" y="192" texturepath="Assets/Textures/Enemigos/png sprites.png" deathfxpath="Assets/Audio/Fx/rat.wav" dest1X="34" dest1Y="12" dest2X="44" dest2Y="12">
 				<animations>
 					<idleground loop="true" speed="0.1f">
 						<idle x="0" y="0" w="32" h="13"/>

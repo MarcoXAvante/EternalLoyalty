@@ -1,5 +1,6 @@
 #include "EnemyAir.h"
 #include "Scene.h"
+#include "Audio.h"
 
 EnemyAir::EnemyAir() :Enemy()
 {
@@ -29,6 +30,8 @@ bool EnemyAir::Awake()
 	for (pugi::xml_node animNode = parameters.child("animations").child("dieair").child("die"); animNode != NULL; animNode = animNode.next_sibling("die")) {
 		dieAir.PushBack({ animNode.attribute("x").as_int(), animNode.attribute("y").as_int() ,animNode.attribute("w").as_int() ,animNode.attribute("h").as_int() });
 	}
+
+	deathFX = app->audio->LoadFx(parameters.attribute("deathfxpath").as_string());
 	return true;
 }
 
@@ -178,6 +181,7 @@ void EnemyAir::OnCollision(PhysBody* physA, PhysBody* physB)
 	case ColliderType::PLAYER:
 		hit = true;
 		currentAnimation = &dieAir;
+		app->audio->PlayFx(deathFX);
 		break;
 	default:
 		break;

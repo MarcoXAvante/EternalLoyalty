@@ -20,5 +20,6 @@ public:
 	Animation walkingGround;
 	Animation dieGround;
 	bool grounded;
+	int deathFX;
 };
 

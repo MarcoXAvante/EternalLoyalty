@@ -1,6 +1,7 @@
 #include "EnemyGround.h"
 #include "Scene.h"
 #include "Log.h"
+#include "Audio.h"
 
 EnemyGround::EnemyGround() :Enemy()
 {
@@ -30,6 +31,8 @@ bool EnemyGround::Awake()
 	for (pugi::xml_node animNode = parameters.child("animations").child("dieground").child("die"); animNode != NULL; animNode = animNode.next_sibling("die")) {
 		dieGround.PushBack({ animNode.attribute("x").as_int(), animNode.attribute("y").as_int() ,animNode.attribute("w").as_int() ,animNode.attribute("h").as_int() });
 	}
+
+	deathFX = app->audio->LoadFx(parameters.attribute("deathfxpath").as_string());
 	return true;
 }
 
@@ -150,11 +153,13 @@ void EnemyGround::OnCollision(PhysBody* physA, PhysBody* physB)
 		hit = true;
 		velocity.x = 0;
 		currentAnimation = &dieGround;
+		app->audio->PlayFx(deathFX);
 		break;
 	case ColliderType::DEADLY:
 		hit = true;
 		velocity.x = 0;
 		currentAnimation = &dieGround;
+		app->audio->PlayFx(deathFX);
 		break;
 	case ColliderType::PLATFORM:
 		break;
