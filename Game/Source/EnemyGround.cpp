@@ -149,7 +149,7 @@ void EnemyGround::OnCollision(PhysBody* physA, PhysBody* physB)
 {
 	switch (physB->ctype)
 	{
-	case ColliderType::PLAYER:
+	case ColliderType::BARK:
 		hit = true;
 		velocity.x = 0;
 		currentAnimation = &dieGround;

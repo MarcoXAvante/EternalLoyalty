@@ -55,7 +55,14 @@ bool Player::Awake() {
 		jumpDog.PushBack({ animNode.attribute("x").as_int(), animNode.attribute("y").as_int() ,animNode.attribute("w").as_int() ,animNode.attribute("h").as_int() });
 	}
 
+	attackDog.loop = config.child("animations").child("attackdog").attribute("loop").as_bool();
+	attackDog.speed = config.child("animations").child("attackdog").attribute("speed").as_float();
 
+	for (pugi::xml_node animNode = config.child("animations").child("attackdog").child("attack"); animNode != NULL; animNode = animNode.next_sibling("attack")) {
+		attackDog.PushBack({ animNode.attribute("x").as_int(), animNode.attribute("y").as_int() ,animNode.attribute("w").as_int() ,animNode.attribute("h").as_int() });
+	}
+
+	barkFX = app->audio->LoadFx(config.attribute("barkfxpath").as_string());
 	return true;
 }
 
@@ -156,6 +163,14 @@ bool Player::Update(float dt)
 				currentAnimation = &walkingDog;
 			}
 		}
+
+
+		if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN) {
+			attackDog.Reset();
+			app->audio->PlayFx(barkFX);
+			currentAnimation = &attackDog;
+
+		}
 	}
 	else {
 		currentAnimation = &dieDog;
@@ -226,12 +241,8 @@ bool Player::Update(float dt)
 		dead = !dead;
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN) {
-
-	}
-
-	pbody->body->SetLinearVelocity(velocity);
 	if (!god) {
+		pbody->body->SetLinearVelocity(velocity);
 		b2Transform pbodyPos = pbody->body->GetTransform();
 		position.x = METERS_TO_PIXELS(pbodyPos.p.x) - 48 / 2;
 		position.y = METERS_TO_PIXELS(pbodyPos.p.y) - 32 / 2;

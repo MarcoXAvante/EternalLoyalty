@@ -50,6 +50,7 @@ public:
 	Animation idleDog;
 	Animation dieDog;
 	Animation jumpDog;
+	Animation attackDog;
 	Animation* currentAnimation = nullptr;
 
 	bool flip;
@@ -59,6 +60,7 @@ public:
 
 	//Audio fx
 	int pickCoinFxId;
+	int barkFX;
 
 	// L07 DONE 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;

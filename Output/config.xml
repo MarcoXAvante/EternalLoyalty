@@ -21,7 +21,7 @@
 	</window>
 
 	<scene>
-		<player x="64" y="208" texturePath="Assets/Textures/Perrete/Animacion perrete.png" coinfxpath="Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg">
+		<player x="64" y="208" texturePath="Assets/Textures/Perrete/Animacion perrete con ataque3.png" barkfxpath="Assets/Audio/Fx/bark.wav" coinfxpath="Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg">
 			<animations>
 				<idledog loop="true" speed="0.1f">
 					<idle x="10" y="7" w="46" h="37"/>
@@ -45,6 +45,12 @@
 					<jump x="171" y="106" w="46" h="37"/>
 					<jump x="228" y="106" w="46" h="37"/>
 				</jumpdog>
+				<attackdog loop="false" speed="0.10f">
+					<attack x="10" y="147" w="46" h="37"/>
+					<attack x="58" y="147" w="46" h="37"/>
+					<attack x="112" y="147" w="46" h="37"/>
+					<attack x="173" y="147" w="46" h="37"/>
+				</attackdog>
 			</animations>
 		</player>
 		<map path="Assets/Maps/" name="mapa.tmx"/>
