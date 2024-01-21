@@ -244,6 +244,32 @@ bool Map::Load(SString mapFileName)
             PhysBody* c1 = app->physics->CreateChain(x, y, intArray, intVector.size(), STATIC);
             c1->ctype = ColliderType::PLATFORM;
         }
+
+        for (pugi::xml_node ramps = mapFileXML.child("map").child("objectgroup").next_sibling().child("object"); ramps != NULL; ramps = ramps.next_sibling("object")) {
+            std::string s = ramps.child("polygon").attribute("points").as_string();
+            std::istringstream iss(s);
+            std::string point;
+            int x = ramps.attribute("x").as_int();
+            int y = ramps.attribute("y").as_int();
+            std::vector<int> intVector;
+
+            while (std::getline(iss, point, ' ')) {
+                size_t commaPos = point.find(',');
+                float x = std::stof(point.substr(0, commaPos));
+                float y = std::stof(point.substr(commaPos + 1));
+
+                // Convert to int (you might want to round or truncate depending on your specific needs)
+                int intX = static_cast<int>(x);
+                int intY = static_cast<int>(y);
+
+                intVector.push_back(intX);
+                intVector.push_back(intY);
+            }
+            int* intArray = intVector.data();
+
+            PhysBody* c1 = app->physics->CreateChain(x, y, intArray, intVector.size(), STATIC);
+            c1->ctype = ColliderType::RAMP;
+        }
         // L07 DONE 3: Create colliders      
         // L07 DONE 7: Assign collider type
         // Later you can create a function here to load and create the colliders from the map

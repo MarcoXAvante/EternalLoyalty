@@ -104,16 +104,16 @@ bool Player::Update(float dt)
 		velocity = b2Vec2(0, 0);
 	}
 
-	if (pbody->body->GetContactList() == NULL) {
-		grounded = false;
+	if (!grounded) {
+		velocity.y += 0.01;
 	}
 
 	currentAnimation->Update();
 	if (!dead) {
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 			velocity.x = -0.3 * dt;
-			if (remainingJumpSteps == 0 && grounded) {
-				velocity.y = 0.01 * dt;
+			if (ramp) {
+				velocity.y = -0.04 * dt;
 			}
 			currentAnimation = &walkingDog;
 			flip = true;
@@ -125,8 +125,8 @@ bool Player::Update(float dt)
 
 		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 			velocity.x = 0.3 * dt;
-			if (remainingJumpSteps == 0 && grounded) {
-				velocity.y = 0.01 * dt;
+			if (ramp) {
+				velocity.y = -0.04 * dt;
 			}
 			currentAnimation = &walkingDog;
 			flip = false;
@@ -137,7 +137,7 @@ bool Player::Update(float dt)
 		}
 
 		if (!god) {
-			if (pbody->body->GetContactList() != NULL && grounded) {
+			if (grounded || ramp) {
 				if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)// && pbody->listener->OnCollision())
 				{
 					remainingJumpSteps = maxJumpSteps; //  1/10th of a second at 60Hz
@@ -292,12 +292,29 @@ bool Player::CleanUp()
 	return true;
 }
 
+
+
+void Player::EndCollision(PhysBody* physA, PhysBody* physB) {
+	switch (physB->ctype)
+	{
+	case ColliderType::PLATFORM:
+		if (grounded) {
+			grounded = false;
+		}
+		break;
+	case ColliderType::RAMP:
+		ramp = false;
+		break;
+	}
+	
+}
+
 // L07 DONE 6: Define OnCollision function for the player. 
 void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	switch (physB->ctype)
 	{
 	case ColliderType::PLATFORM:
-		grounded = true;
+ 		grounded = true;
 		LOG("Collision PLATFORM");
 		break;
 	case ColliderType::ITEM:
@@ -313,7 +330,9 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		}
 		break;
 	case ColliderType::BARK:
-		grounded = false;
+		break;
+	case ColliderType::RAMP:
+		ramp = true;
 		break;
 	default:
 		break;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="340" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="54" nextobjectid="95">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="340" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="55" nextobjectid="110">
  <tileset firstgid="1" name="forestatardecer" tilewidth="16" tileheight="16" tilecount="696" columns="24">
   <image source="forestatardecer.png" width="384" height="464"/>
   <tile id="238">
@@ -47774,10 +47774,7 @@
    <tile gid="455"/>
   </data>
  </layer>
- <objectgroup id="12" name="Colisiones" visible="0">
-  <object id="1" x="0.181818" y="208.182">
-   <polygon points="0,0 19.2727,-0.181818 50.3636,31.6364 159.455,31.6364 205.091,-16.1818 259.636,-16.1818 321.818,47.6364 383.636,47.6364 383.636,111.818 -0.363636,111.636"/>
-  </object>
+ <objectgroup id="12" name="Colisiones">
   <object id="3" x="448.5" y="257">
    <polygon points="0,0 96,0 94.5,-50 271.5,-49.5 272,-1 336,-0.5 337,-146 304.5,-174 304.5,-193.5 400,-193 542.5,-50.5 543,63 -0.5,63"/>
   </object>
@@ -47901,8 +47898,31 @@
   <object id="94" x="2032" y="80">
    <polygon points="0,0 48,0 64,16 64,32 48,32 16,64 -16,32 -16,16 0,0"/>
   </object>
+  <object id="103" x="0" y="240">
+   <polygon points="0,0 160,0 160,80 0,80"/>
+  </object>
+  <object id="104" x="208" y="192">
+   <polygon points="0,0 0,128 48,128 48,0"/>
+  </object>
+  <object id="105" x="320" y="256">
+   <polygon points="0,0 0,64 64,64 64,0"/>
+  </object>
+  <object id="109" x="0" y="208">
+   <polygon points="0,0 0,32 16,32 16,0"/>
+  </object>
  </objectgroup>
- <layer id="53" name="Navigation" width="340" height="20">
+ <objectgroup id="54" name="Ramps">
+  <object id="106" x="256" y="192">
+   <polygon points="0,0 64,64 0,64"/>
+  </object>
+  <object id="107" x="208" y="192">
+   <polygon points="0,0 -48,48 0,48"/>
+  </object>
+  <object id="108" x="16" y="208">
+   <polygon points="0,0 0,32 32,32"/>
+  </object>
+ </objectgroup>
+ <layer id="53" name="Navigation" width="340" height="20" visible="0">
   <data>
    <tile/>
    <tile/>

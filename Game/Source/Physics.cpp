@@ -319,6 +319,19 @@ bool Physics::CleanUp()
 	return true;
 }
 
+
+void Physics::EndContact(b2Contact* contact)
+{
+	PhysBody* physA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
+	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
+
+	if (physA && physA->listener != NULL)
+		physA->listener->EndCollision(physA, physB);
+
+	if (physB && physB->listener != NULL)
+		physB->listener->EndCollision(physB, physA);
+}
+
 // Callback function to collisions with Box2D
 void Physics::BeginContact(b2Contact* contact)
 {
