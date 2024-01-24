@@ -3,6 +3,10 @@
 
 #include "Module.h"
 #include "Player.h"
+#include "GuiManager.h"
+#include "GuiButton.h"
+#include "GuiSlider.h"
+#include "GuiCheckBox.h"
 #include <iostream>
 
 struct SDL_Texture;
@@ -48,6 +52,28 @@ public:
 	//L03: DONE 3b: Declare a Player attribute
 	Player* player;
 
+	bool pauseMenu;
+	bool paused;
+
+private:
+	GuiButton* Resume;
+	GuiButton* Settings;
+	GuiButton* BackToTitle;
+	GuiButton* Exit;
+	GuiButton* Back;
+	GuiSlider* SliderMusic;
+	GuiSlider* SliderFX;
+	GuiCheckBox* CheckBoxFullscreen;
+	GuiCheckBox* CheckBoxVsync;
+	SDL_Texture* pause;
+	SDL_Texture* options;
+	SDL_Texture* resume;
+	SDL_Texture* settings;
+	SDL_Texture* backToTitle;
+	SDL_Texture* exit;
+	SDL_Texture* back;
+	SDL_Texture* slider;
+	SDL_Texture* checkBox;
 };
 
 #endif // __SCENE_H__

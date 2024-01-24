@@ -110,86 +110,88 @@ bool Player::Update(float dt)
 
 	currentAnimation->Update();
 	if (!dead) {
-		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-			velocity.x = -0.3 * dt;
-			if (ramp) {
-				velocity.y = -0.04 * dt;
+		if (!app->scene->paused) {
+			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+				velocity.x = -0.3 * dt;
+				if (ramp) {
+					velocity.y = -0.04 * dt;
+				}
+				currentAnimation = &walkingDog;
+				flip = true;
 			}
-			currentAnimation = &walkingDog;
-			flip = true;
-		}
 
-		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_UP) {
-			currentAnimation = &idleDog;
-		}
-
-		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-			velocity.x = 0.3 * dt;
-			if (ramp) {
-				velocity.y = -0.04 * dt;
+			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_UP) {
+				currentAnimation = &idleDog;
 			}
-			currentAnimation = &walkingDog;
-			flip = false;
-		}
 
-		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_UP) {
-			currentAnimation = &idleDog;
-		}
+			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+				velocity.x = 0.3 * dt;
+				if (ramp) {
+					velocity.y = -0.04 * dt;
+				}
+				currentAnimation = &walkingDog;
+				flip = false;
+			}
 
-		if (!god) {
-			if (grounded || ramp) {
-				if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)// && pbody->listener->OnCollision())
+			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_UP) {
+				currentAnimation = &idleDog;
+			}
+
+			if (!god) {
+				if (grounded || ramp) {
+					if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)// && pbody->listener->OnCollision())
+					{
+						remainingJumpSteps = maxJumpSteps; //  1/10th of a second at 60Hz
+						jumpForceReduce = 0;
+					}
+				}
+
+				if (remainingJumpSteps > 0)
 				{
-					remainingJumpSteps = maxJumpSteps; //  1/10th of a second at 60Hz
-					jumpForceReduce = 0;
+					//to change velocity by 10 in one time step
+					pbody->body->SetLinearDamping(0.1f);
+					float force = pbody->body->GetMass() * 10 / (1 / 30.0); //f = mv/t
+					force /= 4.0;	//spread this over 6 time steps
+					force -= jumpForceReduce;
+
+					jumpForceReduce = (maxJumpSteps - remainingJumpSteps);
+					pbody->body->ApplyForce(b2Vec2(0, -(force * dt)), pbody->body->GetWorldCenter(), true);
+					remainingJumpSteps--;
+				}
+			}
+			else {
+				if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+					velocity.y = -0.2 * dt;
+					currentAnimation = &walkingDog;
+				}
+				if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+					velocity.y = 0.2 * dt;
+					currentAnimation = &walkingDog;
 				}
 			}
 
-			if (remainingJumpSteps > 0)
-			{
-				//to change velocity by 10 in one time step
-				pbody->body->SetLinearDamping(0.1f);
-				float force = pbody->body->GetMass() * 10 / (1 / 30.0); //f = mv/t
-				force /= 4.0;	//spread this over 6 time steps
-				force -= jumpForceReduce;
 
-				jumpForceReduce = (maxJumpSteps - remainingJumpSteps);
-				pbody->body->ApplyForce(b2Vec2(0, -(force * dt)), pbody->body->GetWorldCenter(), true);
-				remainingJumpSteps--;
-			}
-		}
-		else {
-			if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-				velocity.y = -0.2 * dt;
-				currentAnimation = &walkingDog;
-			}
-			if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-				velocity.y = 0.2 * dt;
-				currentAnimation = &walkingDog;
-			}
-		}
+			if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN) {
+				attackDog.Reset();
+				app->audio->PlayFx(barkFX);
+				currentAnimation = &attackDog;
+				b2Vec2 bPosition;
+				if (flip) {
+					bPosition = b2Vec2(PIXEL_TO_METERS(position.x), PIXEL_TO_METERS(position.y));
+				}
+				else {
+					bPosition = b2Vec2(PIXEL_TO_METERS(position.x + 1), PIXEL_TO_METERS(position.y));
+				}
+				bark->body->SetTransform(bPosition, 0);
 
-
-		if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN) {
-			attackDog.Reset();
-			app->audio->PlayFx(barkFX);
-			currentAnimation = &attackDog; 
-			b2Vec2 bPosition;
-			if (flip){
-				bPosition = b2Vec2(PIXEL_TO_METERS(position.x), PIXEL_TO_METERS(position.y));
 			}
-			else {
-				bPosition = b2Vec2(PIXEL_TO_METERS(position.x + 1), PIXEL_TO_METERS(position.y));
-			}
-			bark->body->SetTransform(bPosition, 0);
-
 		}
 	}
 	else {
 		currentAnimation = &dieDog;
 	}
 
-	if (attackDog.HasFinished()) {
+	if (attackDog.HasFinished() || currentAnimation != &attackDog) {
 		bark->body->SetTransform({ 0,0 }, 0);
 	}
 

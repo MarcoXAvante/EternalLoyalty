@@ -7,12 +7,15 @@
 #include "Scene.h"
 #include "Map.h"
 #include "Physics.h"
+#include "GuiManager.h"
 
 #include "Defs.h"
 #include "Log.h"
 
 #include <iostream>
 #include <sstream>
+
+#include "Optick/include/optick.h"
 
 // Constructor
 App::App(int argc, char* args[]) : argc(argc), args(args)
@@ -37,6 +40,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	scene = new Scene();
 	map = new Map();
 	entityManager = new EntityManager();
+	guiManager = new GuiManager(true);
 
 
 	// Ordered for awake / Start / Update
@@ -50,6 +54,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(scene);
 	AddModule(map);
 	AddModule(entityManager);
+	AddModule(guiManager);
 
 	// Render last to swap buffer
 	AddModule(render);
@@ -184,12 +189,14 @@ bool App::LoadConfig()
 // ---------------------------------------------
 void App::PrepareUpdate()
 {
+	OPTICK_EVENT();
 	frameTime.Start();
 }
 
 // ---------------------------------------------
 void App::FinishUpdate()
 {
+	OPTICK_EVENT();
 	// This is a good place to call Load / Save functions
 
 	// L02: DONE 1: Cap the framerate of the gameloop
@@ -249,6 +256,7 @@ void App::FinishUpdate()
 // Call modules before each loop iteration
 bool App::PreUpdate()
 {
+	OPTICK_EVENT();
 	bool ret = true;
 
 	ListItem<Module*>* item;
@@ -271,6 +279,7 @@ bool App::PreUpdate()
 // Call modules on each loop iteration
 bool App::DoUpdate()
 {
+	OPTICK_EVENT();
 	bool ret = true;
 	ListItem<Module*>* item;
 	item = modules.start;
@@ -293,6 +302,7 @@ bool App::DoUpdate()
 // Call modules after each loop iteration
 bool App::PostUpdate()
 {
+	OPTICK_EVENT();
 	bool ret = true;
 	ListItem<Module*>* item;
 	Module* pModule = NULL;

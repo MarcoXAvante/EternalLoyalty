@@ -5,7 +5,10 @@
 
 #include "PugiXml/src/pugixml.hpp"
 
+#include "Optick/include/optick.h"
+
 class App;
+class GuiControl;
 
 class Module
 {
@@ -65,11 +68,42 @@ public:
 	{
 		return true;
 	}
+
+	virtual bool OnGuiMouseClickEvent(GuiControl* control)
+	{
+		return true;
+	}
+
+	void Enable()
+	{
+		if (!isEnabled)
+		{
+
+			active = true;
+			isEnabled = true;
+
+		}
+	}
+
+	void Disable()
+	{
+		if (isEnabled)
+		{
+
+			active = false;
+			isEnabled = false;
+
+		}
+	}
+
+	inline bool IsEnabled() const { return isEnabled; }
+
 public:
 
 	SString name;
 	bool active;
 
+	bool isEnabled;
 };
 
 #endif // __MODULE_H__

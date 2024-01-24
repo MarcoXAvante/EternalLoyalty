@@ -82,6 +82,46 @@ bool Scene::Start()
 	textPosX = (float)windowW / 2 - (float)texW / 2;
 	textPosY = (float)windowH / 2 - (float)texH / 2;
 
+	resume = app->tex->Load("Assets/UI/Resume.png");
+	Resume = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, resume, "", { 125,100,117,24 }, this);
+	Resume->state = GuiControlState::DISABLED;
+
+	settings = app->tex->Load("Assets/UI/Settings.png");
+	Settings = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, settings, "", { 125,130,144,24 }, this);
+	Settings->state = GuiControlState::DISABLED;
+
+	backToTitle = app->tex->Load("Assets/UI/BackToTitle.png");
+	BackToTitle = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, backToTitle, "", { 125,150,220,24 }, this);
+	BackToTitle->state = GuiControlState::DISABLED;
+
+	exit = app->tex->Load("Assets/UI/Exit.png");
+	Exit = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 4, exit, "", { 125,200,73,24 }, this);
+	Exit->state = GuiControlState::DISABLED;
+
+	back = app->tex->Load("Assets/UI/Back.png");
+	Back = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, back, "", { 235,205,56,29 }, this);
+	Back->state = GuiControlState::DISABLED;
+
+	slider = app->tex->Load("Assets/UI/Slider.png");
+
+	SliderMusic = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 7, slider, "", { 621/3,216/3,15,30 }, this);
+	SliderMusic->state = GuiControlState::DISABLED;
+
+	SliderFX = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 8, slider, "", { 621/3,371/3,15,30 }, this);
+	SliderFX->state = GuiControlState::DISABLED;
+
+	checkBox = app->tex->Load("Assets/UI/CheckBox.png");
+
+	CheckBoxFullscreen = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 9, checkBox, "", { 701/3,468/3,24,24 }, this);
+	CheckBoxFullscreen->state = GuiControlState::DISABLED;
+
+	CheckBoxVsync = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 10, checkBox, "", { 610/3,566/3,24,24 }, this);
+	CheckBoxVsync->state = GuiControlState::DISABLED;
+
+	options = app->tex->Load("Assets/Textures/OptionsScreenFromPause.png");
+
+	pauseMenu = false;
+
 	return true;
 }
 
@@ -133,6 +173,41 @@ bool Scene::Update(float dt)
 		app->LoadRequest();
 	};
 
+	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || Resume->state == GuiControlState::PRESSED) {
+
+		if (paused) {
+
+			paused = false;
+		}
+		else {
+			paused = true;
+		}
+
+		pauseMenu = false;
+
+	}
+
+	if (Settings->state == GuiControlState::PRESSED) {
+
+		pauseMenu = true;
+		Back->state = GuiControlState::NORMAL;
+
+	}
+
+	if (Back->state == GuiControlState::PRESSED) {
+		pauseMenu = false;
+	}
+
+	app->scene->SliderMusic->bounds.x = SliderMusic->bounds.x;
+	app->scene->SliderMusic->posx = SliderMusic->posx;
+
+	app->scene->SliderFX->bounds.x = SliderFX->bounds.x;
+	app->scene->SliderFX->posx = SliderFX->posx;
+
+	Mix_VolumeMusic((SliderMusic->bounds.x - 324) * (128 - 0) / (674 - 324) + 0);
+
+
+
 	return true;
 }
 
@@ -141,8 +216,72 @@ bool Scene::PostUpdate()
 {
 	bool ret = true;
 
-	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+	if (paused) {
+
+		app->render->DrawTexture(pause, -app->render->camera.x, -app->render->camera.y);
+
+		if (Resume->state == GuiControlState::DISABLED) Resume->state = GuiControlState::NORMAL;
+		if (Settings->state == GuiControlState::DISABLED) Settings->state = GuiControlState::NORMAL;
+		if (BackToTitle->state == GuiControlState::DISABLED) BackToTitle->state = GuiControlState::NORMAL;
+		if (Exit->state == GuiControlState::DISABLED) Exit->state = GuiControlState::NORMAL;
+
+		Resume->Draw(app->render);
+		Settings->Draw(app->render);
+		BackToTitle->Draw(app->render);
+		Exit->Draw(app->render);
+
+		if (pauseMenu) {
+
+			if (Back->state == GuiControlState::DISABLED) Back->state = GuiControlState::NORMAL;
+			if (SliderMusic->state == GuiControlState::DISABLED) SliderMusic->state = GuiControlState::NORMAL;
+			if (SliderFX->state == GuiControlState::DISABLED) SliderFX->state = GuiControlState::NORMAL;
+			if (CheckBoxFullscreen->state == GuiControlState::DISABLED) CheckBoxFullscreen->state = GuiControlState::NORMAL;
+			if (CheckBoxVsync->state == GuiControlState::DISABLED) CheckBoxVsync->state = GuiControlState::NORMAL;
+
+			if (Resume->state != GuiControlState::DISABLED) Resume->state = GuiControlState::DISABLED;
+
+			if (Settings->state != GuiControlState::DISABLED) Settings->state = GuiControlState::DISABLED;
+			if (BackToTitle->state != GuiControlState::DISABLED) BackToTitle->state = GuiControlState::DISABLED;
+			if (Exit->state != GuiControlState::DISABLED) Exit->state = GuiControlState::DISABLED;
+
+			app->render->DrawTexture(options, -app->render->camera.x, -app->render->camera.y);
+
+			Back->Draw(app->render);
+			SliderMusic->Draw(app->render);
+			SliderFX->Draw(app->render);
+			CheckBoxFullscreen->Draw(app->render);
+			CheckBoxVsync->Draw(app->render);
+		}
+
+		if (!pauseMenu) {
+
+			if (Resume->state == GuiControlState::DISABLED) Resume->state = GuiControlState::NORMAL;
+			if (Settings->state == GuiControlState::DISABLED) Settings->state = GuiControlState::NORMAL;
+			if (BackToTitle->state == GuiControlState::DISABLED) BackToTitle->state = GuiControlState::NORMAL;
+			if (Exit->state == GuiControlState::DISABLED) Exit->state = GuiControlState::NORMAL;
+
+			if (Back->state != GuiControlState::DISABLED) Back->state = GuiControlState::DISABLED;
+			if (SliderMusic->state != GuiControlState::DISABLED) SliderMusic->state = GuiControlState::DISABLED;
+			if (SliderFX->state != GuiControlState::DISABLED) SliderFX->state = GuiControlState::DISABLED;
+			if (CheckBoxFullscreen->state != GuiControlState::DISABLED) CheckBoxFullscreen->state = GuiControlState::DISABLED;
+			if (CheckBoxVsync->state != GuiControlState::DISABLED) CheckBoxVsync->state = GuiControlState::DISABLED;
+
+		}
+
+	}
+
+	if (!paused) {
+
+		if (Resume->state != GuiControlState::DISABLED) Resume->state = GuiControlState::DISABLED;
+		if (Settings->state != GuiControlState::DISABLED) Settings->state = GuiControlState::DISABLED;
+		if (BackToTitle->state != GuiControlState::DISABLED) BackToTitle->state = GuiControlState::DISABLED;
+		if (Exit->state != GuiControlState::DISABLED) Exit->state = GuiControlState::DISABLED;
+
+	}
+
+	if (Exit->state == GuiControlState::PRESSED) {
 		ret = false;
+	}
 
 	return ret;
 }
