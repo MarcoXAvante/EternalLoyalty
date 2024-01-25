@@ -5,18 +5,23 @@
 	<textures />
 	<audio />
 	<:anonymous />
+	<:anonymous />
+	<:anonymous />
+	<sceneIntro />
+	<sceneMenu />
 	<scene />
 	<:anonymous />
 	<entitymanager>
 		<entities>
-			<player x="1274" y="223" dead="true" />
+			<player x="1853" y="239" dead="false" />
 			<enemy x="3984" y="208" dead="false" />
-			<enemy x="663" y="192" dead="false" />
-			<enemy x="1273" y="212" dead="false" />
-			<enemy x="2432" y="96" dead="false" />
+			<enemy x="640" y="191" dead="false" />
+			<enemy x="1178" y="175" dead="false" />
+			<enemy x="2433" y="63" dead="false" />
 		</entities>
 	</entitymanager>
+	<guiManager />
 	<renderer>
-		<camera x="-1978" y="0" />
+		<camera x="-3136" y="0" />
 	</renderer>
 </game_state>

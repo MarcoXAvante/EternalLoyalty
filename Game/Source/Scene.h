@@ -54,8 +54,6 @@ public:
 
 	bool pauseMenu;
 	bool paused;
-
-private:
 	bool startMusic;
 	GuiButton* resume;
 	GuiButton* settings;
@@ -75,6 +73,9 @@ private:
 	SDL_Texture* backTex;
 	SDL_Texture* sliderTex;
 	SDL_Texture* checkBoxTex;
+
+	Timer time;
+	int score;
 };
 
 #endif // __SCENE_H__

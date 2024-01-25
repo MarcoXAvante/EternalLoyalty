@@ -20,6 +20,7 @@ class Audio;
 class FadeToBlack;
 class Fonts;
 class SceneIntro;
+class SceneMenu;
 class Scene;
 class EntityManager;
 class Map;
@@ -105,6 +106,7 @@ public:
 	FadeToBlack* fadeToBlack;
 	Fonts* fonts;
 	SceneIntro* sceneIntro;
+	SceneMenu* sceneMenu;
 	Scene* scene;
 	EntityManager* entityManager;
 	Map* map;

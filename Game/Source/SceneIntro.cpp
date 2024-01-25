@@ -37,8 +37,7 @@ bool SceneIntro::PreUpdate() {
 bool SceneIntro::Update(float dt) {
 	OPTICK_EVENT();
 	if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
-		app->fadeToBlack->Fade(this, (Module*)app->scene, 0);
-		app->map->Enable();
+		app->fadeToBlack->Fade(this, (Module*)app->sceneMenu, 0);
 	}
 	return true;
 }

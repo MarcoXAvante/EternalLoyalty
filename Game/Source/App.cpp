@@ -7,6 +7,7 @@
 #include "FadeToBlack.h"
 #include "Fonts.h"
 #include "SceneIntro.h"
+#include "SceneMenu.h"
 #include "Scene.h"
 #include "Map.h"
 #include "Physics.h"
@@ -43,6 +44,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	//L07 DONE 2: Add Physics module
 	physics = new Physics(true);
 	sceneIntro = new SceneIntro(true);
+	sceneMenu = new SceneMenu(false);
 	scene = new Scene(false);
 	map = new Map(false);
 	entityManager = new EntityManager(true);
@@ -60,6 +62,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	//L07 DONE 2: Add Physics module
 	AddModule(physics);
 	AddModule(sceneIntro);
+	AddModule(sceneMenu);
 	AddModule(scene);
 	AddModule(map);
 	AddModule(entityManager);
