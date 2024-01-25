@@ -1,6 +1,7 @@
 #include "GuiCheckBox.h"
 #include "Render.h"
 #include "App.h"
+#include "Window.h"
 #include "Audio.h"
 #include "Log.h"
 
@@ -78,6 +79,7 @@ bool GuiCheckBox::Update(float dt)
 bool GuiCheckBox::Draw(Render* render)
 {
 	//L15: DONE 4: Draw the button according the GuiControl State
+	int scale = app->win->GetScale();
 
 	rect.x = 0;
 	rect.y = 0;
@@ -93,8 +95,8 @@ bool GuiCheckBox::Draw(Render* render)
 	case GuiControlState::NORMAL:
 
 		//render->DrawRectangle(bounds, 0, 0, 255, 255, true, false);
-		app->render->DrawTexture(tex, -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, &rect);
-		if (debug) app->render->DrawRectangle({ -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 0, 255, 0, 255, false);
+		app->render->DrawTexture(tex, -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, &rect);
+		if (debug) app->render->DrawRectangle({ -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 0, 255, 0, 255, false);
 		hoverOnce = false;
 		pressedOnce = false;
 		break;
@@ -105,8 +107,8 @@ bool GuiCheckBox::Draw(Render* render)
 			hoverOnce = true;
 		}
 		rect.y = bounds.h;
-		app->render->DrawTexture(tex, -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, &rect);
-		if (debug) app->render->DrawRectangle({ -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 0, 0, 255, 255, false);
+		app->render->DrawTexture(tex, -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, &rect);
+		if (debug) app->render->DrawRectangle({ -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 0, 0, 255, 255, false);
 
 		break;
 	case GuiControlState::PRESSED:
@@ -116,14 +118,14 @@ bool GuiCheckBox::Draw(Render* render)
 			pressedOnce = true;
 		}
 		rect.y = bounds.h * 2;
-		app->render->DrawTexture(tex, -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, &rect);
-		if (debug) app->render->DrawRectangle({ -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 255, 0, 0, 255, false);
+		app->render->DrawTexture(tex, -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, &rect);
+		if (debug) app->render->DrawRectangle({ -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 255, 0, 0, 255, false);
 		break;
 	}
 
 	if (crossed && state != GuiControlState::DISABLED) {
 		SDL_Rect cross = { 0,bounds.h * 3,bounds.w,bounds.h };
-		app->render->DrawTexture(tex, -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, &cross);
+		app->render->DrawTexture(tex, -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, &cross);
 	}
 
 	app->render->DrawText(text.GetString(), bounds.x, bounds.y, bounds.w, bounds.h, { 255,255,255 });

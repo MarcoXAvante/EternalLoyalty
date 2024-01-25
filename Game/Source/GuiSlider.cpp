@@ -122,6 +122,7 @@ bool GuiSlider::Update(float dt)
 
 bool GuiSlider::Draw(Render* render)
 {
+	int scale = app->win->GetScale();
 
 	rect.x = 0;
 	rect.y = 0;
@@ -136,8 +137,8 @@ bool GuiSlider::Draw(Render* render)
 		break;
 	case GuiControlState::NORMAL:
 
-		app->render->DrawTexture(tex, -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, &rect);
-		if (debug) app->render->DrawRectangle({ -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 0, 255, 0, 255, false);
+		app->render->DrawTexture(tex, -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, &rect);
+		if (debug) app->render->DrawRectangle({ -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 0, 255, 0, 255, false);
 		hoverOnce = false;
 		break;
 	case GuiControlState::FOCUSED:
@@ -147,15 +148,15 @@ bool GuiSlider::Draw(Render* render)
 			hoverOnce = true;
 		}
 		rect.y = bounds.h;
-		app->render->DrawTexture(tex, -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, &rect);
-		if (debug) app->render->DrawRectangle({ -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 0, 0, 255, 255, false);
+		app->render->DrawTexture(tex, -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, &rect);
+		if (debug) app->render->DrawRectangle({ -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 0, 0, 255, 255, false);
 
 		break;
 	case GuiControlState::PRESSED:
 
 		rect.y = bounds.h * 2;
-		app->render->DrawTexture(tex, -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, &rect);
-		if (debug) app->render->DrawRectangle({ -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 255, 0, 0, 255, false);
+		app->render->DrawTexture(tex, -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, &rect);
+		if (debug) app->render->DrawRectangle({ -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 255, 0, 0, 255, false);
 
 		break;
 	default:

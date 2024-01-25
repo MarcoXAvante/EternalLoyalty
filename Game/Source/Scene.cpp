@@ -13,7 +13,9 @@
 #include "Defs.h"
 #include "Log.h"
 
-Scene::Scene() : Module()
+#include "SDL_mixer/include/SDL_mixer.h"
+
+Scene::Scene(bool startEnabled) : Module(startEnabled)
 {
 	name.Create("scene");
 }
@@ -27,13 +29,12 @@ bool Scene::Awake(pugi::xml_node config)
 {
 	LOG("Loading Scene");
 	bool ret = true;
-
+	this->config = config;
 	//L03: DONE 3b: Instantiate the player using the entity manager
 	//L04 DONE 7: Get player paremeters
 	player = (Player*) app->entityManager->CreateEntity(EntityType::PLAYER);
 	//Assigns the XML node to a member in player
 	player->config = config.child("player");
-	app->audio->PlayMusic(config.child("music").attribute("path").as_string(), 1.0f);
 
 	//Get the map name from the config file and assigns the value in the module
 	app->map->name = config.child("map").attribute("name").as_string();
@@ -56,7 +57,7 @@ bool Scene::Awake(pugi::xml_node config)
 	}
 
 	// iterate all items in the scene
-	// Check https://pugixml.org/docs/quickstart.html#access
+	// check https://pugixml.org/docs/quickstart.html#access
 	for (pugi::xml_node itemNode = config.child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
 	{
 		Item* item = (Item*)app->entityManager->CreateEntity(EntityType::ITEM);
@@ -82,43 +83,45 @@ bool Scene::Start()
 	textPosX = (float)windowW / 2 - (float)texW / 2;
 	textPosY = (float)windowH / 2 - (float)texH / 2;
 
-	resume = app->tex->Load("Assets/UI/Resume.png");
-	Resume = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, resume, "", { 125,100,117,24 }, this);
-	Resume->state = GuiControlState::DISABLED;
+	startMusic = true;
 
-	settings = app->tex->Load("Assets/UI/Settings.png");
-	Settings = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, settings, "", { 125,130,144,24 }, this);
-	Settings->state = GuiControlState::DISABLED;
+	resumeTex = app->tex->Load("Assets/UI/resume.png");
+	resume = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, resumeTex, "", { 125,100,117,24 }, this);
+	resume->state = GuiControlState::DISABLED;
 
-	backToTitle = app->tex->Load("Assets/UI/BackToTitle.png");
-	BackToTitle = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, backToTitle, "", { 125,150,220,24 }, this);
-	BackToTitle->state = GuiControlState::DISABLED;
+	settingsTex = app->tex->Load("Assets/UI/settings.png");
+	settings = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, settingsTex, "", { 125,130,144,24 }, this);
+	settings->state = GuiControlState::DISABLED;
 
-	exit = app->tex->Load("Assets/UI/Exit.png");
-	Exit = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 4, exit, "", { 125,200,73,24 }, this);
-	Exit->state = GuiControlState::DISABLED;
+	backToTitleTex = app->tex->Load("Assets/UI/backToTitle.png");
+	backToTitle = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, backToTitleTex, "", { 125,165,220,24 }, this);
+	backToTitle->state = GuiControlState::DISABLED;
 
-	back = app->tex->Load("Assets/UI/Back.png");
-	Back = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, back, "", { 235,205,56,29 }, this);
-	Back->state = GuiControlState::DISABLED;
+	exitTex = app->tex->Load("Assets/UI/exit.png");
+	exit = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 4, exitTex, "", { 125,200,73,24 }, this);
+	exit->state = GuiControlState::DISABLED;
 
-	slider = app->tex->Load("Assets/UI/Slider.png");
+	backTex = app->tex->Load("Assets/UI/back.png");
+	back = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, backTex, "", { 235,205,56,29 }, this);
+	back->state = GuiControlState::DISABLED;
 
-	SliderMusic = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 7, slider, "", { 621/3,216/3,15,30 }, this);
-	SliderMusic->state = GuiControlState::DISABLED;
+	sliderTex = app->tex->Load("Assets/UI/slider.png");
 
-	SliderFX = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 8, slider, "", { 621/3,371/3,15,30 }, this);
-	SliderFX->state = GuiControlState::DISABLED;
+	sliderMusic = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 7, sliderTex, "", { 621/3,216/3,15,30 }, this);
+	sliderMusic->state = GuiControlState::DISABLED;
 
-	checkBox = app->tex->Load("Assets/UI/CheckBox.png");
+	sliderFX = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 8, sliderTex, "", { 621/3,371/3,15,30 }, this);
+	sliderFX->state = GuiControlState::DISABLED;
 
-	CheckBoxFullscreen = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 9, checkBox, "", { 701/3,468/3,24,24 }, this);
-	CheckBoxFullscreen->state = GuiControlState::DISABLED;
+	checkBoxTex = app->tex->Load("Assets/UI/checkBox.png");
 
-	CheckBoxVsync = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 10, checkBox, "", { 610/3,566/3,24,24 }, this);
-	CheckBoxVsync->state = GuiControlState::DISABLED;
+	checkBoxFullscreen = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 9, checkBoxTex, "", { 701/3,468/3,24,24 }, this);
+	checkBoxFullscreen->state = GuiControlState::DISABLED;
 
-	options = app->tex->Load("Assets/Textures/OptionsScreenFromPause.png");
+	checkBoxVsync = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 10, checkBoxTex, "", { 610/3,566/3,24,24 }, this);
+	checkBoxVsync->state = GuiControlState::DISABLED;
+
+	optionsTex = app->tex->Load("Assets/Textures/OptionsScreenFromPause.png");
 
 	pauseMenu = false;
 
@@ -128,6 +131,10 @@ bool Scene::Start()
 // Called each loop iteration
 bool Scene::PreUpdate()
 {
+	if (startMusic) {
+		app->audio->PlayMusic(config.child("music").attribute("path").as_string(), 1.0f);
+		startMusic = false;
+	}
 	return true;
 }
 
@@ -165,6 +172,12 @@ bool Scene::Update(float dt)
 	*/
 	// Renders the image in the center of the screen 
 	//app->render->DrawTexture(img, (int)textPosX, (int)textPosY);
+	if (!app->entityManager->IsEnabled()) {
+
+		app->entityManager->Enable();
+
+	}
+
 
 	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) {
 		app->SaveRequest();
@@ -173,7 +186,7 @@ bool Scene::Update(float dt)
 		app->LoadRequest();
 	};
 
-	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || Resume->state == GuiControlState::PRESSED) {
+	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || resume->state == GuiControlState::PRESSED) {
 
 		if (paused) {
 
@@ -187,25 +200,30 @@ bool Scene::Update(float dt)
 
 	}
 
-	if (Settings->state == GuiControlState::PRESSED) {
+	if (settings->state == GuiControlState::PRESSED) {
 
 		pauseMenu = true;
-		Back->state = GuiControlState::NORMAL;
+		back->state = GuiControlState::NORMAL;
 
 	}
 
-	if (Back->state == GuiControlState::PRESSED) {
+	if (back->state == GuiControlState::PRESSED) {
 		pauseMenu = false;
 	}
 
-	app->scene->SliderMusic->bounds.x = SliderMusic->bounds.x;
-	app->scene->SliderMusic->posx = SliderMusic->posx;
+	app->scene->sliderMusic->bounds.x = sliderMusic->bounds.x;
+	app->scene->sliderMusic->posx = sliderMusic->posx;
 
-	app->scene->SliderFX->bounds.x = SliderFX->bounds.x;
-	app->scene->SliderFX->posx = SliderFX->posx;
+	app->scene->sliderFX->bounds.x = sliderFX->bounds.x;
+	app->scene->sliderFX->posx = sliderFX->posx;
 
-	Mix_VolumeMusic((SliderMusic->bounds.x - 324) * (128 - 0) / (674 - 324) + 0);
+	Mix_VolumeMusic((sliderMusic->bounds.x - 324) * (128 - 0) / (674 - 324) + 0);
 
+	for (int i = 0; i < app->audio->fx.Count(); i++) {
+
+		Mix_VolumeChunk(app->audio->fx.At(i)->data, (sliderFX->bounds.x - 324) * (128 - 0) / (674 - 324) + 0);
+
+	}
 
 
 	return true;
@@ -218,53 +236,53 @@ bool Scene::PostUpdate()
 
 	if (paused) {
 
-		app->render->DrawTexture(pause, -app->render->camera.x, -app->render->camera.y);
+		app->render->DrawTexture(pauseTex, -app->render->camera.x, -app->render->camera.y);
 
-		if (Resume->state == GuiControlState::DISABLED) Resume->state = GuiControlState::NORMAL;
-		if (Settings->state == GuiControlState::DISABLED) Settings->state = GuiControlState::NORMAL;
-		if (BackToTitle->state == GuiControlState::DISABLED) BackToTitle->state = GuiControlState::NORMAL;
-		if (Exit->state == GuiControlState::DISABLED) Exit->state = GuiControlState::NORMAL;
+		if (resume->state == GuiControlState::DISABLED) resume->state = GuiControlState::NORMAL;
+		if (settings->state == GuiControlState::DISABLED) settings->state = GuiControlState::NORMAL;
+		if (backToTitle->state == GuiControlState::DISABLED) backToTitle->state = GuiControlState::NORMAL;
+		if (exit->state == GuiControlState::DISABLED) exit->state = GuiControlState::NORMAL;
 
-		Resume->Draw(app->render);
-		Settings->Draw(app->render);
-		BackToTitle->Draw(app->render);
-		Exit->Draw(app->render);
+		resume->Draw(app->render);
+		settings->Draw(app->render);
+		backToTitle->Draw(app->render);
+		exit->Draw(app->render);
 
 		if (pauseMenu) {
 
-			if (Back->state == GuiControlState::DISABLED) Back->state = GuiControlState::NORMAL;
-			if (SliderMusic->state == GuiControlState::DISABLED) SliderMusic->state = GuiControlState::NORMAL;
-			if (SliderFX->state == GuiControlState::DISABLED) SliderFX->state = GuiControlState::NORMAL;
-			if (CheckBoxFullscreen->state == GuiControlState::DISABLED) CheckBoxFullscreen->state = GuiControlState::NORMAL;
-			if (CheckBoxVsync->state == GuiControlState::DISABLED) CheckBoxVsync->state = GuiControlState::NORMAL;
+			if (back->state == GuiControlState::DISABLED) back->state = GuiControlState::NORMAL;
+			if (sliderMusic->state == GuiControlState::DISABLED) sliderMusic->state = GuiControlState::NORMAL;
+			if (sliderFX->state == GuiControlState::DISABLED) sliderFX->state = GuiControlState::NORMAL;
+			if (checkBoxFullscreen->state == GuiControlState::DISABLED) checkBoxFullscreen->state = GuiControlState::NORMAL;
+			if (checkBoxVsync->state == GuiControlState::DISABLED) checkBoxVsync->state = GuiControlState::NORMAL;
 
-			if (Resume->state != GuiControlState::DISABLED) Resume->state = GuiControlState::DISABLED;
+			if (resume->state != GuiControlState::DISABLED) resume->state = GuiControlState::DISABLED;
 
-			if (Settings->state != GuiControlState::DISABLED) Settings->state = GuiControlState::DISABLED;
-			if (BackToTitle->state != GuiControlState::DISABLED) BackToTitle->state = GuiControlState::DISABLED;
-			if (Exit->state != GuiControlState::DISABLED) Exit->state = GuiControlState::DISABLED;
+			if (settings->state != GuiControlState::DISABLED) settings->state = GuiControlState::DISABLED;
+			if (backToTitle->state != GuiControlState::DISABLED) backToTitle->state = GuiControlState::DISABLED;
+			if (exit->state != GuiControlState::DISABLED) exit->state = GuiControlState::DISABLED;
 
-			app->render->DrawTexture(options, -app->render->camera.x, -app->render->camera.y);
+			app->render->DrawTexture(optionsTex, -app->render->camera.x, -app->render->camera.y);
 
-			Back->Draw(app->render);
-			SliderMusic->Draw(app->render);
-			SliderFX->Draw(app->render);
-			CheckBoxFullscreen->Draw(app->render);
-			CheckBoxVsync->Draw(app->render);
+			back->Draw(app->render);
+			sliderMusic->Draw(app->render);
+			sliderFX->Draw(app->render);
+			checkBoxFullscreen->Draw(app->render);
+			checkBoxVsync->Draw(app->render);
 		}
 
 		if (!pauseMenu) {
 
-			if (Resume->state == GuiControlState::DISABLED) Resume->state = GuiControlState::NORMAL;
-			if (Settings->state == GuiControlState::DISABLED) Settings->state = GuiControlState::NORMAL;
-			if (BackToTitle->state == GuiControlState::DISABLED) BackToTitle->state = GuiControlState::NORMAL;
-			if (Exit->state == GuiControlState::DISABLED) Exit->state = GuiControlState::NORMAL;
+			if (resume->state == GuiControlState::DISABLED) resume->state = GuiControlState::NORMAL;
+			if (settings->state == GuiControlState::DISABLED) settings->state = GuiControlState::NORMAL;
+			if (backToTitle->state == GuiControlState::DISABLED) backToTitle->state = GuiControlState::NORMAL;
+			if (exit->state == GuiControlState::DISABLED) exit->state = GuiControlState::NORMAL;
 
-			if (Back->state != GuiControlState::DISABLED) Back->state = GuiControlState::DISABLED;
-			if (SliderMusic->state != GuiControlState::DISABLED) SliderMusic->state = GuiControlState::DISABLED;
-			if (SliderFX->state != GuiControlState::DISABLED) SliderFX->state = GuiControlState::DISABLED;
-			if (CheckBoxFullscreen->state != GuiControlState::DISABLED) CheckBoxFullscreen->state = GuiControlState::DISABLED;
-			if (CheckBoxVsync->state != GuiControlState::DISABLED) CheckBoxVsync->state = GuiControlState::DISABLED;
+			if (back->state != GuiControlState::DISABLED) back->state = GuiControlState::DISABLED;
+			if (sliderMusic->state != GuiControlState::DISABLED) sliderMusic->state = GuiControlState::DISABLED;
+			if (sliderFX->state != GuiControlState::DISABLED) sliderFX->state = GuiControlState::DISABLED;
+			if (checkBoxFullscreen->state != GuiControlState::DISABLED) checkBoxFullscreen->state = GuiControlState::DISABLED;
+			if (checkBoxVsync->state != GuiControlState::DISABLED) checkBoxVsync->state = GuiControlState::DISABLED;
 
 		}
 
@@ -272,14 +290,14 @@ bool Scene::PostUpdate()
 
 	if (!paused) {
 
-		if (Resume->state != GuiControlState::DISABLED) Resume->state = GuiControlState::DISABLED;
-		if (Settings->state != GuiControlState::DISABLED) Settings->state = GuiControlState::DISABLED;
-		if (BackToTitle->state != GuiControlState::DISABLED) BackToTitle->state = GuiControlState::DISABLED;
-		if (Exit->state != GuiControlState::DISABLED) Exit->state = GuiControlState::DISABLED;
+		if (resume->state != GuiControlState::DISABLED) resume->state = GuiControlState::DISABLED;
+		if (settings->state != GuiControlState::DISABLED) settings->state = GuiControlState::DISABLED;
+		if (backToTitle->state != GuiControlState::DISABLED) backToTitle->state = GuiControlState::DISABLED;
+		if (exit->state != GuiControlState::DISABLED) exit->state = GuiControlState::DISABLED;
 
 	}
 
-	if (Exit->state == GuiControlState::PRESSED) {
+	if (exit->state == GuiControlState::PRESSED) {
 		ret = false;
 	}
 

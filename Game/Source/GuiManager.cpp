@@ -7,7 +7,7 @@
 #include "GuiSlider.h"
 #include "Audio.h"
 
-GuiManager::GuiManager(bool startEnabled) : Module()
+GuiManager::GuiManager(bool startEnabled) : Module(startEnabled)
 {
 	name.Create("guiManager");
 }

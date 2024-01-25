@@ -7,7 +7,7 @@
 
 #define VSYNC true
 
-Render::Render() : Module()
+Render::Render(bool startEnabled) : Module(startEnabled)
 {
 	name.Create("renderer");
 	background.r = 0;
@@ -52,6 +52,10 @@ bool Render::Awake(pugi::xml_node config)
 		camera.y = 0;
 	}
 
+	TTF_Init();
+
+	font = TTF_OpenFont("Assets/Fonts/Oswald.ttf", 40);
+
 	return ret;
 }
 
@@ -87,6 +91,11 @@ bool Render::PostUpdate()
 bool Render::CleanUp()
 {
 	LOG("Destroying SDL render");
+
+	TTF_CloseFont(font);
+
+	TTF_Quit();
+
 	SDL_DestroyRenderer(renderer);
 	return true;
 }

@@ -14,7 +14,7 @@
 #include "SDL_image/include/SDL_image.h"
 #include <iostream>
 
-Map::Map() : Module(), mapLoaded(false)
+Map::Map(bool startEnabled) : Module(startEnabled), mapLoaded(false)
 {
     name.Create("map");
 }
@@ -142,6 +142,7 @@ bool Map::CleanUp()
 // Load new map
 bool Map::Load(SString mapFileName)
 {
+    OPTICK_EVENT();
     bool ret = true;
 
     // L05: DONE 3: Implement LoadMap to load the map properties

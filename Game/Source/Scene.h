@@ -15,7 +15,7 @@ class Scene : public Module
 {
 public:
 
-	Scene();
+	Scene(bool startEnabled);
 
 	// Destructor
 	virtual ~Scene();
@@ -56,24 +56,25 @@ public:
 	bool paused;
 
 private:
-	GuiButton* Resume;
-	GuiButton* Settings;
-	GuiButton* BackToTitle;
-	GuiButton* Exit;
-	GuiButton* Back;
-	GuiSlider* SliderMusic;
-	GuiSlider* SliderFX;
-	GuiCheckBox* CheckBoxFullscreen;
-	GuiCheckBox* CheckBoxVsync;
-	SDL_Texture* pause;
-	SDL_Texture* options;
-	SDL_Texture* resume;
-	SDL_Texture* settings;
-	SDL_Texture* backToTitle;
-	SDL_Texture* exit;
-	SDL_Texture* back;
-	SDL_Texture* slider;
-	SDL_Texture* checkBox;
+	bool startMusic;
+	GuiButton* resume;
+	GuiButton* settings;
+	GuiButton* backToTitle;
+	GuiButton* exit;
+	GuiButton* back;
+	GuiSlider* sliderMusic;
+	GuiSlider* sliderFX;
+	GuiCheckBox* checkBoxFullscreen;
+	GuiCheckBox* checkBoxVsync;
+	SDL_Texture* pauseTex;
+	SDL_Texture* optionsTex;
+	SDL_Texture* resumeTex;
+	SDL_Texture* settingsTex;
+	SDL_Texture* backToTitleTex;
+	SDL_Texture* exitTex;
+	SDL_Texture* backTex;
+	SDL_Texture* sliderTex;
+	SDL_Texture* checkBoxTex;
 };
 
 #endif // __SCENE_H__

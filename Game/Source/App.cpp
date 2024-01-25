@@ -4,6 +4,9 @@
 #include "Render.h"
 #include "Textures.h"
 #include "Audio.h"
+#include "FadeToBlack.h"
+#include "Fonts.h"
+#include "SceneIntro.h"
 #include "Scene.h"
 #include "Map.h"
 #include "Physics.h"
@@ -30,16 +33,19 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 
 	// L3: DONE 1: Add the EntityManager Module to App
 
-	win = new Window();
-	input = new Input();
-	render = new Render();
-	tex = new Textures();
-	audio = new Audio();
+	win = new Window(true);
+	input = new Input(true);
+	render = new Render(true);
+	tex = new Textures(true);
+	audio = new Audio(true);
+	fadeToBlack = new FadeToBlack(true);
+	fonts = new Fonts(true);
 	//L07 DONE 2: Add Physics module
-	physics = new Physics();
-	scene = new Scene();
-	map = new Map();
-	entityManager = new EntityManager();
+	physics = new Physics(true);
+	sceneIntro = new SceneIntro(true);
+	scene = new Scene(false);
+	map = new Map(false);
+	entityManager = new EntityManager(true);
 	guiManager = new GuiManager(true);
 
 
@@ -49,8 +55,11 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(input);
 	AddModule(tex);
 	AddModule(audio);
+	AddModule(fadeToBlack);
+	AddModule(fonts);
 	//L07 DONE 2: Add Physics module
 	AddModule(physics);
+	AddModule(sceneIntro);
 	AddModule(scene);
 	AddModule(map);
 	AddModule(entityManager);

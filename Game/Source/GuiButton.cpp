@@ -1,6 +1,7 @@
 #include "GuiButton.h"
 #include "Render.h"
 #include "App.h"
+#include "Window.h"
 #include "Audio.h"
 #include "Log.h"
 
@@ -72,6 +73,7 @@ bool GuiButton::Update(float dt)
 bool GuiButton::Draw(Render* render)
 {
 	//L15: DONE 4: Draw the button according the GuiControl State
+	int scale = app->win->GetScale();
 
 	rect.x = 0;
 	rect.y = 0;
@@ -83,12 +85,12 @@ bool GuiButton::Draw(Render* render)
 	case GuiControlState::DISABLED:
 
 		rect.y = bounds.h * 3;
-		app->render->DrawTexture(tex, -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, &rect);
+		app->render->DrawTexture(tex, -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, &rect);
 		break;
 	case GuiControlState::NORMAL:
 
-		app->render->DrawTexture(tex, -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, &rect);
-		if (debug) app->render->DrawRectangle({ -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 0, 255, 0, 255, false);
+		app->render->DrawTexture(tex, -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, &rect);
+		if (debug) app->render->DrawRectangle({ -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 0, 255, 0, 255, false);
 		hoverOnce = false;
 		pressedOnce = false;
 		break;
@@ -99,8 +101,8 @@ bool GuiButton::Draw(Render* render)
 			hoverOnce = true;
 		}
 ;		rect.y = bounds.h;
-		app->render->DrawTexture(tex, -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, &rect);
-		if (debug) app->render->DrawRectangle({ -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 0, 0, 255, 255, false);
+		app->render->DrawTexture(tex, -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, &rect);
+		if (debug) app->render->DrawRectangle({ -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 0, 0, 255, 255, false);
 
 		break;
 	case GuiControlState::PRESSED:
@@ -110,13 +112,13 @@ bool GuiButton::Draw(Render* render)
 			pressedOnce = true;
 		}
 		rect.y = bounds.h * 2; 
-		app->render->DrawTexture(tex, -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, &rect);
-		if (debug) app->render->DrawRectangle({ -app->render->camera.x + bounds.x, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 255, 0, 0, 255, false);
+		app->render->DrawTexture(tex, -app->render->camera.x / scale + bounds.x, -app->render->camera.y + bounds.y, &rect);
+		if (debug) app->render->DrawRectangle({ -app->render->camera.x + bounds.x / scale, -app->render->camera.y + bounds.y, bounds.w, bounds.h }, 255, 0, 0, 255, false);
 
 		break;
 	}
 
-	app->render->DrawText(text.GetString(), bounds.x, bounds.y, bounds.w, bounds.h, { 255,255,255 });
+	app->render->DrawText(text.GetString(), bounds.x / scale, bounds.y, bounds.w, bounds.h, { 255,255,255 });
 
 	return false;
 }

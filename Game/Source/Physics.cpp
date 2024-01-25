@@ -1,12 +1,13 @@
 #include "Physics.h"
 #include "Input.h"
-#include "app.h"
+#include "App.h"
 #include "Log.h"
 #include "math.h"
 #include "SDL/include/SDL_keycode.h"
 #include "Defs.h"
 #include "Log.h"
 #include "Render.h"
+#include "Scene.h"
 #include "Player.h"
 #include "Window.h"
 #include "Box2D/Box2D/Box2D.h"
@@ -18,7 +19,7 @@
 #pragma comment( lib, "../Game/Source/External/Box2D/libx86/ReleaseLib/Box2D.lib" )
 #endif
 
-Physics::Physics() : Module()
+Physics::Physics(bool startEnabled) : Module(startEnabled)
 {
 	// Initialise all the internal class variables, at least to NULL pointer
 	world = NULL;
@@ -228,7 +229,7 @@ bool Physics::PostUpdate()
 		debug = !debug;
 	
 	//  Iterate all objects in the world and draw the bodies
-	if (debug)
+	if (debug && app->scene->IsEnabled())
 	{
 		for (b2Body* b = world->GetBodyList(); b; b = b->GetNext())
 		{
