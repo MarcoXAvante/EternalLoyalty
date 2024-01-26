@@ -16,17 +16,17 @@ Enemy::~Enemy()
 
 bool Enemy::Awake()
 {
+	return true;
+}
+
+bool Enemy::Start()
+{
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
 	Patrol1 = { parameters.attribute("dest1X").as_int() ,parameters.attribute("dest1Y").as_int() };
 	Patrol2 = { parameters.attribute("dest2X").as_int() , parameters.attribute("dest2Y").as_int() };
 	dark = parameters.attribute("dark").as_bool();
-	return true;
-}
-
-bool Enemy::Start()
-{
 	mouseTileTex = app->tex->Load("Assets/Maps/tileSelection.png");
 	dead = false;
 	hit = false;
@@ -61,6 +61,10 @@ bool Enemy::Update(float dt)
 
 bool Enemy::CleanUp()
 {
+	app->tex->UnLoad(texture);
+	app->tex->UnLoad(mouseTileTex);
+	if (pbody != nullptr)
+		pbody->body->SetActive(false);
 	return true;
 }
 

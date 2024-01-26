@@ -10,6 +10,7 @@ EnemyAir::EnemyAir() :Enemy()
 bool EnemyAir::Awake()
 {
 	Enemy::Awake();
+
 	idleAir.loop = parameters.child("animations").child("idleair").attribute("loop").as_bool();
 	idleAir.speed = parameters.child("animations").child("idleair").attribute("speed").as_float();
 
@@ -30,13 +31,15 @@ bool EnemyAir::Awake()
 	for (pugi::xml_node animNode = parameters.child("animations").child("dieair").child("die"); animNode != NULL; animNode = animNode.next_sibling("die")) {
 		dieAir.PushBack({ animNode.attribute("x").as_int(), animNode.attribute("y").as_int() ,animNode.attribute("w").as_int() ,animNode.attribute("h").as_int() });
 	}
-
-	deathFX = app->audio->LoadFx(parameters.attribute("deathfxpath").as_string());
 	return true;
 }
 
 bool EnemyAir::Start()
 {
+	Enemy::Start();
+
+	deathFX = app->audio->LoadFx(parameters.attribute("deathfxpath").as_string());
+
 	initPosition = position;
 	texture = app->tex->Load(texturePath);
 	currentAnimation = &flyingAir;
@@ -57,8 +60,6 @@ bool EnemyAir::Start()
 
 	chaseVelovity = 0.15;
 	patrolVelocity = 0.1;
-
-	Enemy::Start();
 
 	return true;
 }

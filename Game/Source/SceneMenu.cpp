@@ -46,18 +46,19 @@ bool SceneMenu::Start() {
 	sliderTex = app->tex->Load("Assets/UI/slider.png");
 	checkBoxTex = app->tex->Load("Assets/UI/checkbox.png");
 	settingsbg = app->tex->Load("Assets/Textures/Fondos/menusetting.png");
+	creditsbg = app->tex->Load("Assets/Textures/Fondos/credits.png");
 	
 	play = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, playTex, "", { 427/3 + 130, 375/3, 160/2, 49/2 }, this);
 	continueButton = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, continueTex, "", { 360/3 + 120,452/3,301/2,49/2 }, this);
 	settings = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, settingsTex, "", { 365/3 + 120,530/3,288/2,49/2 }, this);
 	credits = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 4, creditsTex, "", { 388/3 + 120,607/3,248/2,49/2 }, this);
 	exit = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, exitTex, "", { 438/3 + 120,679/3,145/2,49/2 }, this);
-	back = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 6, backTex, "", { 704/3 + 120,619/3,112/2,59/2 }, this);
-	back2 = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 6, backTex, "", { 704/3 + 120,619/3,112/2,59/2 }, this);
-	sliderMusic = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 7, sliderTex, "", { 621/3,220/3,30/2,59/2 }, this);
-	sliderFX = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 8, sliderTex, "", { 621/3,375/3,30/2,59/2 }, this);
-	checkBoxFullscreen = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 9, checkBoxTex, "", { 701/3,472/3,48/2,47/2 }, this);
-	checkBoxVsync = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 10, checkBoxTex, "", { 610/3,570/3,48/2,47/2 }, this);
+	back = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 6, backTex, "", { 355,257,112/2,59/2 }, this);
+	back2 = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 6, backTex, "", { 355,257,112/2,59/2 }, this);
+	sliderMusic = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 7, sliderTex, "", { 621/3,78,30/2,59/2 }, this);
+	sliderFX = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 8, sliderTex, "", { 621/3,150,30/2,59/2 }, this);
+	checkBoxFullscreen = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 9, checkBoxTex, "", { 380,192,48/2,47/2 }, this);
+	checkBoxVsync = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 10, checkBoxTex, "", { 270,232,48/2,47/2 }, this);
 	continueButton->state = GuiControlState::DISABLED;
 	back->state = GuiControlState::DISABLED;
 	back2->state = GuiControlState::DISABLED;
@@ -80,8 +81,9 @@ bool SceneMenu::PreUpdate() {
 	OPTICK_EVENT();
 	app->entityManager->Disable();
 
+
 	if (startMusic) {
-		app->audio->PlayMusic("", 1.0f);
+		app->audio->PlayMusic("Assets/Audio/Music/menu.wav", 1.0f);
 		startMusic = false;
 	}
 
@@ -105,19 +107,28 @@ bool SceneMenu::Update(float dt) {
 		app->scene->time.Start();
 		app->scene->score = 0;
 
+		app->fadeToBlack->Fade(this, (Module*)app->scene, 0);
+		app->scene->Start();
+		app->scene->checkBoxFullscreen->state = checkBoxFullscreen->state;
+		app->scene->checkBoxVsync->state = checkBoxVsync->state;
+		app->map->Enable();
+		app->map->Start();
+		app->entityManager->Enable();
+
 		app->scene->player->position = app->scene->player->initialPos;
 		app->scene->player->lives = 3;
-
-		app->fadeToBlack->Fade(this, (Module*)app->scene, 0);
-		app->map->Enable();
-
 	}
 
 	if (continueButton->state == GuiControlState::PRESSED) {
 		startMusic = true;
 
 		app->fadeToBlack->Fade(this, (Module*)app->scene, 0);
+		app->scene->Start();
+		app->scene->checkBoxFullscreen->state = checkBoxFullscreen->state;
+		app->scene->checkBoxVsync->state = checkBoxVsync->state;
 		app->map->Enable();
+		app->map->Start();
+		app->entityManager->Enable();
 
 		app->LoadRequest();
 	}
@@ -141,34 +152,17 @@ bool SceneMenu::Update(float dt) {
 	}
 
 	if (checkBoxFullscreen->crossed) {
-
-		app->scene->checkBoxFullscreen->crossed = true;
 		SDL_SetWindowFullscreen(app->win->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 		SDL_RenderSetLogicalSize(app->render->renderer, 1140, 640);
-
 	} else {
-
-		app->scene->checkBoxFullscreen->crossed = false;
 		SDL_SetWindowFullscreen(app->win->window, 0);
-
 	}
 
 	if (checkBoxVsync->crossed) {
-		app->scene->checkBoxVsync->crossed = true;
 		SDL_GL_SetSwapInterval(1);
-
 	} else {
-
-		app->scene->checkBoxVsync->crossed = false;
 		SDL_GL_SetSwapInterval(0);
-
 	}
-
-	app->scene->sliderMusic->bounds.x = sliderMusic->bounds.x;
-	app->scene->sliderMusic->posx = sliderMusic->posx;
-
-	app->scene->sliderFX->bounds.x = sliderFX->bounds.x;
-	app->scene->sliderFX->posx = sliderFX->posx;
 
 	Mix_VolumeMusic((sliderMusic->bounds.x - 212) * (128) / (387 - 212));
 
@@ -204,7 +198,7 @@ bool SceneMenu::PostUpdate() {
 		if (credits->state != GuiControlState::DISABLED) credits->state = GuiControlState::DISABLED;
 		if (exit->state != GuiControlState::DISABLED) exit->state = GuiControlState::DISABLED;
 
-		app->render->DrawTexture(settingsbg, 0, 0);
+		app->render->DrawTexture(settingsbg, 150, 0);
 
 		back->Draw(app->render);
 		sliderMusic->Draw(app->render);
@@ -237,6 +231,8 @@ bool SceneMenu::PostUpdate() {
 		if (settings->state != GuiControlState::DISABLED) settings->state = GuiControlState::DISABLED;
 		if (credits->state != GuiControlState::DISABLED) credits->state = GuiControlState::DISABLED;
 		if (exit->state != GuiControlState::DISABLED) exit->state = GuiControlState::DISABLED;
+
+		app->render->DrawTexture(creditsbg, 150, 0);
 
 		back2->Draw(app->render);
 	}

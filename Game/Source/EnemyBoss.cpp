@@ -15,6 +15,7 @@ EnemyBoss::~EnemyBoss() {
 bool EnemyBoss::Awake()
 {
 	Enemy::Awake();
+
 	idleGround.loop = parameters.child("animations").child("idleboss").attribute("loop").as_bool();
 	idleGround.speed = parameters.child("animations").child("idleboss").attribute("speed").as_float();
 
@@ -42,6 +43,8 @@ bool EnemyBoss::Awake()
 
 bool EnemyBoss::Start()
 {
+	Enemy::Start();
+
 	distChase = 30;
 	initPosition = position;
 	texture = app->tex->Load(texturePath);
@@ -60,8 +63,6 @@ bool EnemyBoss::Start()
 
 	chaseVelovity = 0.12;
 	patrolVelocity = 0.1;
-
-	Enemy::Start();
 
 	return true;
 }

@@ -33,11 +33,13 @@ bool Scene::Awake(pugi::xml_node config)
 	LOG("Loading Scene");
 	bool ret = true;
 	this->config = config;
-	//L03: DONE 3b: Instantiate the player using the entity manager
-	//L04 DONE 7: Get player paremeters
-	player = (Player*) app->entityManager->CreateEntity(EntityType::PLAYER);
+	// iterate all items in the scene
+	// check https://pugixml.org/docs/quickstart.html#access
+
+	player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 	//Assigns the XML node to a member in player
 	player->config = config.child("player");
+	player->currentlevel = 1;
 
 	//Get the map name from the config file and assigns the value in the module
 	app->map->name = config.child("map").attribute("name").as_string();
@@ -50,6 +52,7 @@ bool Scene::Awake(pugi::xml_node config)
 	{
 		Enemy* GroundEnemy = (Enemy*)app->entityManager->CreateEntity(EntityType::ENEMYGROUND);
 		GroundEnemy->parameters = groundNode;
+		GroundEnemy->currentlevel = 1;
 	}
 
 	//AirEnemy
@@ -57,12 +60,14 @@ bool Scene::Awake(pugi::xml_node config)
 	{
 		Enemy* AirEnemy = (Enemy*)app->entityManager->CreateEntity(EntityType::ENEMYAIR);
 		AirEnemy->parameters = airNode;
+		AirEnemy->currentlevel = 1;
 	}
 
 	//BossEnemy (for testing)
 	for (pugi::xml_node bossNode = enemyNode.child("bossenemy"); bossNode; bossNode = bossNode.next_sibling("bossnode")) {
 		Enemy* BossEnemy = (Enemy*)app->entityManager->CreateEntity(EntityType::ENEMYBOSS);
 		BossEnemy->parameters = bossNode;
+		BossEnemy->currentlevel = 1;
 	}
 
 
@@ -73,6 +78,7 @@ bool Scene::Awake(pugi::xml_node config)
 		Item* item = (Item*)app->entityManager->CreateEntity(EntityType::ITEM);
 		item->parameters = cookieNode;
 		item->type = ItemType::COOKIE;
+		item->currentlevel = 1;
 	}
 	//Lives
 	for (pugi::xml_node lifeNode = itemNode.child("life"); lifeNode; lifeNode = lifeNode.next_sibling("life"))
@@ -80,6 +86,7 @@ bool Scene::Awake(pugi::xml_node config)
 		Item* item = (Item*)app->entityManager->CreateEntity(EntityType::ITEM);
 		item->parameters = lifeNode;
 		item->type = ItemType::LIFE;
+		item->currentlevel = 1;
 	}
 	//Checkpoints
 	for (pugi::xml_node checkNode = itemNode.child("checkpoint"); checkNode; checkNode = checkNode.next_sibling("checkpoint"))
@@ -87,10 +94,8 @@ bool Scene::Awake(pugi::xml_node config)
 		Item* item = (Item*)app->entityManager->CreateEntity(EntityType::ITEM);
 		item->parameters = checkNode;
 		item->type = ItemType::CHECKPOINT;
+		item->currentlevel = 1;
 	}
-	// iterate all items in the scene
-	// check https://pugixml.org/docs/quickstart.html#access
-
 	return ret;
 }
 
@@ -102,11 +107,14 @@ bool Scene::Start()
 	//Music is commented so that you can add your own music
 	//app->audio->PlayMusic("Assets/Audio/Music/music_spy.ogg");
 
+	//L03: DONE 3b: Instantiate the player using the entity manager
+	//L04 DONE 7: Get player paremeters
 	//Get the size of the window
 	app->win->GetWindowSize(windowW, windowH);
 	//Get the size of the texture
 	app->tex->GetSize(img, texW, texH);
-
+	app->entityManager->LevelController(1);
+	player->pbody->body->SetType(b2_dynamicBody);
 
 	startMusic = true;
 
@@ -123,11 +131,11 @@ bool Scene::Start()
 	settings = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, settingsTex, "", { 125,130,144,24 }, this);
 	backToTitle = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, backToTitleTex, "", { 125,165,220,24 }, this);
 	exit = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 4, exitTex, "", { 125,200,73,24 }, this);
-	back = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, backTex, "", { 235,205,56,29 }, this);
-	sliderMusic = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 7, sliderTex, "", { 207,72,15,30 }, this);
-	sliderFX = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 8, sliderTex, "", { 207,124,15,30 }, this);
-	checkBoxFullscreen = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 9, checkBoxTex, "", { 234,156,24,24 }, this);
-	checkBoxVsync = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 10, checkBoxTex, "", { 234,189,24,24 }, this);
+	back = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, backTex, "", { 355,257,112 / 2,59 / 2 }, this);
+	sliderMusic = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 6, sliderTex, "", { 621 / 3,78,30 / 2,59 / 2 }, this);
+	sliderFX = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 7, sliderTex, "", { 621 / 3,150,30 / 2,59 / 2 }, this);
+	checkBoxFullscreen = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 8, checkBoxTex, "", { 380,192,48 / 2,47 / 2 }, this);
+	checkBoxVsync = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 9, checkBoxTex, "", { 270,232,48 / 2,47 / 2 }, this);
 
 	resume->state = GuiControlState::DISABLED;
 	settings->state = GuiControlState::DISABLED;
@@ -138,6 +146,7 @@ bool Scene::Start()
 	sliderFX->state = GuiControlState::DISABLED;
 	checkBoxFullscreen->state = GuiControlState::DISABLED;
 	checkBoxVsync->state = GuiControlState::DISABLED;
+
 
 	pauseMenu = false;
 
@@ -269,13 +278,39 @@ bool Scene::Update(float dt)
 
 	if (checkBoxVsync->crossed) {
 		app->sceneMenu->checkBoxVsync->crossed = true;
-		SDL_GL_SetSwapInterval(1);
+
 
 	} else {
 
 		app->sceneMenu->checkBoxVsync->crossed = false;
-		SDL_GL_SetSwapInterval(0);
 
+
+	}
+
+	if (player->position.x > 5300) {
+		app->map->CleanUp();
+		app->map->Disable();
+		app->entityManager->Disable();
+		app->entityManager->CleanUp();
+		app->fadeToBlack->Fade(this, app->scene2, 0);
+		app->scene2->Start();
+		app->map->name = app->scene2->config.child("map").attribute("name").as_string();
+		app->map->path = app->scene2->config.child("map").attribute("path").as_string();
+		app->map->Enable();
+		app->map->Start();
+	}
+
+	if (app->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN) {
+		app->map->CleanUp();
+		app->map->Disable();
+		app->entityManager->Disable();
+		app->entityManager->CleanUp();
+		app->fadeToBlack->Fade(this, app->scene2, 0);
+		app->scene2->Start();
+		app->map->name = app->scene2->config.child("map").attribute("name").as_string();
+		app->map->path = app->scene2->config.child("map").attribute("path").as_string();
+		app->map->Enable();
+		app->map->Start();	
 	}
 
 	app->sceneMenu->sliderMusic->bounds.x = sliderMusic->bounds.x;
@@ -303,7 +338,7 @@ bool Scene::PostUpdate()
 
 	app->render->DrawText("Score: " + std::to_string((int)score), 10, 10, 300, 70, { 0,0,0 });
 
-	app->render->DrawText("Lives: " + std::to_string((int)player->lives), 310, 10, 300, 70, { 0,0,0 });
+	app->render->DrawText("Lives: " + std::to_string((int)player->lives), 460, 10, 300, 70, { 0,0,0 });
 
 	if (time.ReadSec() < 10) {
 
@@ -347,7 +382,7 @@ bool Scene::PostUpdate()
 			if (backToTitle->state != GuiControlState::DISABLED) backToTitle->state = GuiControlState::DISABLED;
 			if (exit->state != GuiControlState::DISABLED) exit->state = GuiControlState::DISABLED;
 
-			app->render->DrawTexture(optionsTex, -app->render->camera.x, -app->render->camera.y);
+			app->render->DrawTexture(optionsTex, -app->render->camera.x+150, -app->render->camera.y);
 
 			back->Draw(app->render);
 			sliderMusic->Draw(app->render);

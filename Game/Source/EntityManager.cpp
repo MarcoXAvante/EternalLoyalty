@@ -68,13 +68,11 @@ bool EntityManager::CleanUp()
 	ListItem<Entity*>* item;
 	item = entities.end;
 
-	while (item != NULL && ret == true)
+	while (item != NULL && ret == true && !item->data->active)
 	{
 		ret = item->data->CleanUp();
 		item = item->prev;
 	}
-
-	entities.Clear();
 
 	return ret;
 }
@@ -192,4 +190,19 @@ bool EntityManager::SaveState(pugi::xml_node node) {
 
 
 	return true;
+}
+
+void EntityManager::LevelController(int currentlevel) {
+	ListItem<Entity*>* item;
+
+	for (item = entities.start; item != NULL; item = item->next)
+	{
+		if (item->data->currentlevel == currentlevel) {
+			item->data->active = true;
+		}
+		else {
+			item->data->active = false;
+			item->data->CleanUp();
+		}
+	}
 }

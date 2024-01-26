@@ -61,6 +61,7 @@ public:
 	SDL_Texture* sliderTex;
 	SDL_Texture* checkBoxTex;
 	SDL_Texture* settingsbg;
+	SDL_Texture* creditsbg;
 
 	pugi::xml_document saveFile;
 	pugi::xml_parse_result result;

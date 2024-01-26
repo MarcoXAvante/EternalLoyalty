@@ -27,6 +27,7 @@ bool Item::Awake() {
 
 bool Item::Start() {
 
+
 	//initilize textures
 	texture = app->tex->Load(texturePath);
 	
@@ -37,16 +38,15 @@ bool Item::Start() {
 	int height = 32;
 
 	if (type == ItemType::COOKIE) {
-		pbody = app->physics->CreateCircleSensor(position.x + width / 2, position.y + height / 2, 12, bodyType::KINEMATIC, ColliderType::ITEM_COOKIE);
+		pbody = app->physics->CreateCircleSensor(position.x + width / 2, position.y + height / 2, 12, bodyType::STATIC, ColliderType::ITEM_COOKIE);
 	}
 
 	if (type == ItemType::LIFE) {
-		pbody = app->physics->CreateCircleSensor(position.x + width / 2, position.y + height / 2, 14, bodyType::KINEMATIC, ColliderType::ITEM_LIFE);
+		pbody = app->physics->CreateCircleSensor(position.x + width / 2, position.y + height / 2, 14, bodyType::STATIC, ColliderType::ITEM_LIFE);
 	}
 
 	if (type == ItemType::CHECKPOINT) {
-		pbody = app->physics->CreateRectangleSensor(position.x, position.y, 60, 49, bodyType::KINEMATIC, ColliderType::ITEM_CHECKPOINT);
-		this->number = parameters.attribute("number").as_int();
+		pbody = app->physics->CreateRectangleSensor(position.x, position.y, 60, 49, bodyType::STATIC, ColliderType::ITEM_CHECKPOINT);
 	}
 
 	pbody->listener = this;
@@ -62,8 +62,21 @@ bool Item::Update(float dt)
 	position.x = METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2;
 	position.y = METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2;
 
-	app->render->DrawTexture(texture, position.x, position.y, false);
+	if (type == ItemType::CHECKPOINT) {
+		SDL_Rect rect;
 
+		if (checkpoint) {
+			rect = { 60,0,60,49 };
+		}
+		else {
+			rect = { 0, 0, 60, 49 };
+		}
+
+		app->render->DrawTexture(texture, position.x, position.y, &rect);
+	}
+	else {
+		app->render->DrawTexture(texture, position.x, position.y, false);
+	}
 	return true;
 }
 
@@ -97,12 +110,11 @@ void Item::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Collision PLAYER");
 
 		if (type == ItemType::COOKIE || type == ItemType::LIFE) {
+			this->Disable();
 			pbody->body->DestroyFixture(pbody->body->GetFixtureList());
-			Disable();
 			pbody->body->SetActive(false);
-		}
 
-		if (type == ItemType::CHECKPOINT) {
+		} else if (type == ItemType::CHECKPOINT) {
 
 			if (!checkpoint) app->audio->PlayFx(checkpointFX);
 
@@ -112,9 +124,6 @@ void Item::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 			app->SaveRequest();
 		}
-
 		break;
-
 	}
-
 }

@@ -61,9 +61,9 @@ bool GuiSlider::Update(float dt)
 
 				state = GuiControlState::PRESSED;
 
-				if (posx >= 0 && posx + bounds.w <= app->win->width) {
+				if (x0 >= 0 && x0 + bounds.w <= app->win->width) {
 
-					if (bounds.x >= 212 && bounds.x <= 387) {
+					if (bounds.x >= 206 && bounds.x <= 414) {
 
 						bounds.x = x0 - bounds.w / 2;
 						posx = x0 - bounds.w / 2;
@@ -71,16 +71,15 @@ bool GuiSlider::Update(float dt)
 					}
 					else {
 
-						if (posx > 387) {
+						if (posx > 414) {
 
-							bounds.x = 387;
-							posx = 387;
+							bounds.x = 414;
+							posx = 414;
 
-						}
-						else {
+						} else {
 
-							bounds.x = 212;
-							posx = 212;
+							bounds.x = 206;
+							posx = 206;
 
 						}
 						

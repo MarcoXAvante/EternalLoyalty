@@ -24,6 +24,7 @@ class SceneMenu;
 class Scene;
 class Scene2;
 class GameOverScene;
+class WinScene;
 class EntityManager;
 class Map;
 //L07 DONE 2: Add Physics module
@@ -112,6 +113,7 @@ public:
 	Scene* scene;
 	Scene2* scene2;
 	GameOverScene* gameoverscene;
+	WinScene* winscene;
 	EntityManager* entityManager;
 	Map* map;
 	//L07 DONE 2: Add Physics module

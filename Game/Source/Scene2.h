@@ -76,5 +76,4 @@ public:
 
 	Timer time;
 	int score;
-	int previoustime = 0;
 };

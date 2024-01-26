@@ -1,5 +1,6 @@
 #include "App.h"
 #include "Textures.h"
+#include "Audio.h"
 #include "Scene.h"
 #include "GameOverScene.h"
 #include "FadeToBlack.h"
@@ -31,6 +32,10 @@ bool GameOverScene::Start() {
 
 bool GameOverScene::PreUpdate() {
 	OPTICK_EVENT();
+	if (startMusic) {
+		app->audio->PlayMusic("Assets/Audio/Music/gameover.wav", 1.0f);
+		startMusic = false;
+	}
 	app->entityManager->Disable();
 	return true;
 }

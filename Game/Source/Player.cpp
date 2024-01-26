@@ -6,6 +6,7 @@
 #include "Input.h"
 #include "Render.h"
 #include "Scene.h"
+#include "Scene2.h"
 #include "GameOverScene.h"
 #include "Log.h"
 #include "Point.h"
@@ -25,7 +26,6 @@ Player::~Player() {
 
 bool Player::Awake() {
 
-	//L03: DONE 2: Initialize Player parameters
 	initialPos = iPoint(config.attribute("x").as_int(), config.attribute("y").as_int());
 	position = initialPos;
 	checkPos = initialPos;
@@ -66,16 +66,19 @@ bool Player::Awake() {
 	}
 
 	barkFX = app->audio->LoadFx(config.attribute("barkfxpath").as_string());
+
+	//L03: DONE 2: Initialize Player parameters
 	return true;
 }
 
 bool Player::Start() {
-
 	texture = app->tex->Load(config.attribute("texturePath").as_string());
 
 	// L07 DONE 5: Add physics to the player - initialize physics body
 	app->tex->GetSize(texture, texW, texH);
-	pbody = app->physics->CreateCircle(initialPos.x, initialPos.y, 16, bodyType::DYNAMIC);
+	if (pbody == NULL) {
+		pbody = app->physics->CreateCircle(initialPos.x, initialPos.y, 16, bodyType::STATIC);
+	}
 	pbody->body->SetFixedRotation(true);
 	bark = app->physics->CreateRectangleSensor(0, 0, 34, 50, bodyType::DYNAMIC, ColliderType::BARK);
 	bark->listener = this;
@@ -115,7 +118,7 @@ bool Player::Update(float dt)
 
 	currentAnimation->Update();
 	if (!dead) {
-		if (!app->scene->paused) {
+		if (!app->scene->paused || !app->scene2->paused) {
 			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 				velocity.x = -0.3 * dt;
 				if (ramp) {
@@ -295,7 +298,7 @@ bool Player::Update(float dt)
 	}
 	app->render->DrawTextureDX(texture, position.x, position.y, flip, &currentAnimation->GetCurrentFrame());
 
-	if (gameover || app->scene->time.ReadSec() == 500 /* || app->scene2->time.ReadSec() + app->scene2->previoustime == 500*/ ) {
+	if (gameover || (app->scene->active == true && app->scene->time.ReadSec() == 500)  || (app->scene2->active == true && app->scene2->time.ReadSec() == 500)) {
 
 		app->render->camera.y = ((initialPos.y - texH / 2) - (app->scene->windowH / 2)) * -1;
 		app->render->camera.x = ((initialPos.x - texW / 2) - (app->scene->windowW / 2)) * -1;

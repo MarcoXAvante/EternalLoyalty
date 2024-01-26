@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "Render.h"
 #include "Scene.h"
+#include "Scene2.h"
 #include "Player.h"
 #include "Window.h"
 #include "Box2D/Box2D/Box2D.h"
@@ -262,7 +263,7 @@ bool Physics::PostUpdate()
 		debug = !debug;
 	
 	//  Iterate all objects in the world and draw the bodies
-	if (debug && app->scene->IsEnabled())
+	if (debug && (app->scene->IsEnabled() || app->scene2->IsEnabled()))
 	{
 		for (b2Body* b = world->GetBodyList(); b; b = b->GetNext())
 		{
@@ -442,4 +443,9 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 	}
 
 	return ret;
+}
+
+void Physics::DestroyBody(b2Body* body)
+{
+	world->DestroyBody(body);
 }

@@ -11,6 +11,7 @@
 #include "Scene.h"
 #include "Scene2.h"
 #include "GameOverScene.h"
+#include "WinScene.h"
 #include "Map.h"
 #include "Physics.h"
 #include "GuiManager.h"
@@ -50,6 +51,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	scene = new Scene(false);
 	scene2 = new Scene2(false);
 	gameoverscene = new GameOverScene(false);
+	winscene = new WinScene(false);
 	map = new Map(false);
 	entityManager = new EntityManager(true);
 	guiManager = new GuiManager(true);
@@ -68,8 +70,9 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(sceneIntro);
 	AddModule(sceneMenu);
 	AddModule(scene);
-	//AddModule(scene2);
+	AddModule(scene2);
 	AddModule(gameoverscene);
+	AddModule(winscene);
 	AddModule(map);
 	AddModule(entityManager);
 	AddModule(guiManager);
@@ -150,7 +153,9 @@ bool App::Start()
 
 	while(item != NULL && ret == true)
 	{
-		ret = item->data->Start();
+		if (item->data->IsEnabled()) {
+			ret = item->data->Start();
+		}
 		item = item->next;
 	}
 

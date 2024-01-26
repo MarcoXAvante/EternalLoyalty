@@ -8,6 +8,7 @@
 #include "SceneMenu.h"
 #include "Scene.h"
 #include "Scene2.h"
+#include "WinScene.h"
 #include "Map.h"
 #include "Item.h"
 #include "Physics.h"
@@ -35,20 +36,17 @@ bool Scene2::Awake(pugi::xml_node config)
 	bool ret = true;
 	this->config = config;
 	//L03: DONE 3b: Instantiate the player using the entity manager
-	//L04 DONE 7: Get player paremeters
-
-
-	player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
-	//Assigns the XML node to a member in player
-	player->config = config.child("player");
+	// 
 
 	//Get the map name from the config file and assigns the value in the module
-	app->map->name = config.child("map").attribute("name").as_string();
-	app->map->path = config.child("map").attribute("path").as_string();
 	//Get the size of the window
 	app->win->GetWindowSize(windowW, windowH);
 	//Get the size of the texture
 	app->tex->GetSize(img, texW, texH);
+
+	//L04 DONE 7: Get player paremeters
+	this->player = app->scene->GetPlayer();
+
 
 	pugi::xml_node enemyNode = config.child("enemy");
 	//GroundEnemy
@@ -56,6 +54,7 @@ bool Scene2::Awake(pugi::xml_node config)
 	{
 		Enemy* GroundEnemy = (Enemy*)app->entityManager->CreateEntity(EntityType::ENEMYGROUND);
 		GroundEnemy->parameters = groundNode;
+		GroundEnemy->currentlevel = 2;
 	}
 
 	//AirEnemy
@@ -63,11 +62,13 @@ bool Scene2::Awake(pugi::xml_node config)
 	{
 		Enemy* AirEnemy = (Enemy*)app->entityManager->CreateEntity(EntityType::ENEMYAIR);
 		AirEnemy->parameters = airNode;
+		AirEnemy->currentlevel = 2;
 	}
 	//BossEnemy
 	for (pugi::xml_node bossNode = enemyNode.child("bossenemy"); bossNode; bossNode = bossNode.next_sibling("bossnode")) {
 		Enemy* BossEnemy = (Enemy*)app->entityManager->CreateEntity(EntityType::ENEMYBOSS);
 		BossEnemy->parameters = bossNode;
+		BossEnemy->currentlevel = 2;
 	}
 
 
@@ -78,6 +79,7 @@ bool Scene2::Awake(pugi::xml_node config)
 		Item* item = (Item*)app->entityManager->CreateEntity(EntityType::ITEM);
 		item->parameters = cookieNode;
 		item->type = ItemType::COOKIE;
+		item->currentlevel = 2;
 	}
 	//Lives
 	for (pugi::xml_node lifeNode = itemNode.child("life"); lifeNode; lifeNode = lifeNode.next_sibling("life"))
@@ -85,6 +87,7 @@ bool Scene2::Awake(pugi::xml_node config)
 		Item* item = (Item*)app->entityManager->CreateEntity(EntityType::ITEM);
 		item->parameters = lifeNode;
 		item->type = ItemType::LIFE;
+		item->currentlevel = 2;
 	}
 	//Checkpoints
 	for (pugi::xml_node checkNode = itemNode.child("checkpoint"); checkNode; checkNode = checkNode.next_sibling("checkpoint"))
@@ -92,7 +95,9 @@ bool Scene2::Awake(pugi::xml_node config)
 		Item* item = (Item*)app->entityManager->CreateEntity(EntityType::ITEM);
 		item->parameters = checkNode;
 		item->type = ItemType::CHECKPOINT;
+		item->currentlevel = 2;
 	}
+
 	return ret;
 }
 
@@ -103,6 +108,29 @@ bool Scene2::Start()
 
 	//Music is commented so that you can add your own music
 	//app->audio->PlayMusic("Assets/Audio/Music/music_spy.ogg");
+	time.Start();
+	player->active = true;
+	player->currentlevel = 2;
+	app->entityManager->LevelController(2);
+	app->entityManager->Start();
+
+
+	player->pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(32), PIXEL_TO_METERS(88)),player->pbody->body->GetAngle());
+
+	b2Transform pbodyPos = player->pbody->body->GetTransform();
+	player->position.x = METERS_TO_PIXELS(pbodyPos.p.x) - 48 / 2;
+	player->position.y = METERS_TO_PIXELS(pbodyPos.p.y) - 32 / 2;
+
+	app->render->camera.y = ((player->position.y - texH / 2) - (app->scene->windowH / 2)) * -1;
+	app->render->camera.x = ((player->position.x - texW / 2) - (app->scene->windowW / 2)) * -1;
+
+
+	if (app->render->camera.x >= 0) {
+		app->render->camera.x = 0;
+	}
+	if (app->render->camera.y >= 0) {
+		app->render->camera.y = 0;
+	}
 
 
 	startMusic = true;
@@ -114,17 +142,20 @@ bool Scene2::Start()
 	backTex = app->tex->Load("Assets/UI/back.png");
 	sliderTex = app->tex->Load("Assets/UI/slider.png");
 	checkBoxTex = app->tex->Load("Assets/UI/checkBox.png");
-	optionsTex = app->tex->Load("Assets/Textures/OptionsScreenFromPause.png");
+	optionsTex = app->tex->Load("Assets/Textures/Fondos/menusetting.png");
 
 	resume = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, resumeTex, "", { 125,100,117,24 }, this);
 	settings = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, settingsTex, "", { 125,130,144,24 }, this);
 	backToTitle = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, backToTitleTex, "", { 125,165,220,24 }, this);
 	exit = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 4, exitTex, "", { 125,200,73,24 }, this);
-	back = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, backTex, "", { 235,205,56,29 }, this);
-	sliderMusic = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 7, sliderTex, "", { 207,72,15,30 }, this);
-	sliderFX = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 8, sliderTex, "", { 207,124,15,30 }, this);
-	checkBoxFullscreen = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 9, checkBoxTex, "", { 234,156,24,24 }, this);
-	checkBoxVsync = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 10, checkBoxTex, "", { 234,189,24,24 }, this);
+	back = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, backTex, "", { 355,257,112 / 2,59 / 2 }, this);
+	sliderMusic = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 6, sliderTex, "", { 621 / 3,78,30 / 2,59 / 2 }, this);
+	sliderFX = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER, 7, sliderTex, "", { 621 / 3,150,30 / 2,59 / 2 }, this);
+	checkBoxFullscreen = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 8, checkBoxTex, "", { 380,192,48 / 2,47 / 2 }, this);
+	checkBoxVsync = (GuiCheckBox*)app->guiManager->CreateGuiControl(GuiControlType::CHECKBOX, 9, checkBoxTex, "", { 270,232,48 / 2,47 / 2 }, this);
+
+	checkBoxFullscreen->state = app->scene->checkBoxFullscreen->state;
+	checkBoxVsync->state = app->scene->checkBoxVsync->state;
 
 	resume->state = GuiControlState::DISABLED;
 	settings->state = GuiControlState::DISABLED;
@@ -135,6 +166,7 @@ bool Scene2::Start()
 	sliderFX->state = GuiControlState::DISABLED;
 	checkBoxFullscreen->state = GuiControlState::DISABLED;
 	checkBoxVsync->state = GuiControlState::DISABLED;
+
 
 	pauseMenu = false;
 
@@ -157,9 +189,11 @@ bool Scene2::Update(float dt)
 {
 
 	int limitCamX = ((player->position.x * app->win->scale - (windowW / 2)));
-	if (limitCamX > 0 && limitCamX < (app->map->getMapWidth() - windowW) * app->win->scale) {
+	if (limitCamX > 0 && limitCamX < (app->map->getMapWidth() - windowW / 2) * app->win->scale) {
 		app->render->camera.x = (player->position.x * app->win->scale - (windowW / 2)) * -1;
 	}
+
+
 
 	/*
 	int limitCamY = player->position.y - (windowH / 2);
@@ -267,6 +301,16 @@ bool Scene2::Update(float dt)
 
 	}
 
+
+	if (player->position.x > 5500) {
+		app->map->CleanUp();
+		app->map->Disable();
+		app->entityManager->Disable();
+		app->entityManager->CleanUp();
+		app->fadeToBlack->Fade(this, app->winscene, 0);
+		app->winscene->Start();
+	}
+
 	app->sceneMenu->sliderMusic->bounds.x = sliderMusic->bounds.x;
 	app->sceneMenu->sliderMusic->posx = sliderMusic->posx;
 
@@ -289,6 +333,10 @@ bool Scene2::Update(float dt)
 bool Scene2::PostUpdate()
 {
 	bool ret = true;
+
+	app->render->DrawText("Score: " + std::to_string((int)score), 10, 10, 300, 70, { 0,0,0 });
+
+	app->render->DrawText("Lives: " + std::to_string((int)player->lives), 460, 10, 300, 70, { 0,0,0 });
 
 	if (time.ReadSec() < 10) {
 
@@ -334,7 +382,7 @@ bool Scene2::PostUpdate()
 			if (backToTitle->state != GuiControlState::DISABLED) backToTitle->state = GuiControlState::DISABLED;
 			if (exit->state != GuiControlState::DISABLED) exit->state = GuiControlState::DISABLED;
 
-			app->render->DrawTexture(optionsTex, -app->render->camera.x, -app->render->camera.y);
+			app->render->DrawTexture(optionsTex, -app->render->camera.x + 150, -app->render->camera.y);
 
 			back->Draw(app->render);
 			sliderMusic->Draw(app->render);

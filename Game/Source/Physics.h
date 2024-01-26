@@ -82,6 +82,7 @@ public:
 	
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
+	void DestroyBody(b2Body* body);
 	void EndContact(b2Contact* contact);
 	bool debug;
 

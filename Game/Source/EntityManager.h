@@ -38,6 +38,8 @@ public:
 	//
 	bool SaveState(pugi::xml_node node);
 
+	void LevelController(int currentlevel);
+
 public:
 
 	List<Entity*> entities;

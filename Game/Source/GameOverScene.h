@@ -30,4 +30,5 @@ public:
 	bool CleanUp();
 private:
 	SDL_Texture* logo;
+	bool startMusic;
 };

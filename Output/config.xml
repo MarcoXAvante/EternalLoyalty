@@ -21,7 +21,7 @@
 	</window>
 
 	<scene>
-		<player x="64" y="208" texturePath="Assets/Textures/Perrete/Animacion perrete con ataque3.png" barkfxpath="Assets/Audio/Fx/bark.wav" coinfxpath="Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg">
+		<player x="64" y="192" texturePath="Assets/Textures/Perrete/Animacion perrete con ataque3.png" barkfxpath="Assets/Audio/Fx/bark.wav" coinfxpath="Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg">
 			<animations>
 				<idledog loop="true" speed="0.1f">
 					<idle x="10" y="7" w="46" h="37"/>
@@ -153,8 +153,8 @@
 			<cookie x="4704" y="16" texturepath="Assets/Textures/Items/cookie.png"/>
 			<cookie x="4064" y="128" texturepath="Assets/Textures/Items/cookie.png"/>
 			<life x="4192" y="96" texturepath="Assets/Textures/Items/1up.png"/>
-			<checkpoint x="1850" y="250" texturepath="Assets/Textures/Items/checkpoint.png" number="1"/>
-			<checkpoint x="4234" y="42" texturepath="Assets/Textures/Items/checkpoint.png" number="2"/>
+			<checkpoint x="1850" y="250" texturepath="Assets/Textures/Items/checkpoint.png"/>
+			<checkpoint x="4234" y="42" texturepath="Assets/Textures/Items/checkpoint.png"/>
 		</item>
 	</scene>
 	<scene2>
@@ -192,7 +192,7 @@
 		</player>
 
 		<map path="Assets/Maps/" name="mapa2.tmx"/>
-		<music path="Assets/Audio/Music/level1.wav" />
+		<music path="Assets/Audio/Music/level2.wav" />
 
 		<enemy>
 			<airenemy x="1424" y="160" texturepath="Assets/Textures/Enemigos/png sprites.png" deathfxpath="Assets/Audio/Fx/bird.wav" dest1X="88" dest1Y="3" dest2X="92" dest2Y="12">
@@ -257,7 +257,7 @@
 					</dieground>
 				</animations>
 			</groundenemy>
-			<groundenemy x="656" y="128" texturepath="Assets/Textures/Enemigos/png sprites.png" deathfxpath="Assets/Audio/Fx/rat.wav" dest1X="38" dest1Y="9" dest2X="45" dest2Y="9">
+			<groundenemy x="716" y="112" texturepath="Assets/Textures/Enemigos/png sprites.png" deathfxpath="Assets/Audio/Fx/rat.wav" dest1X="38" dest1Y="9" dest2X="45" dest2Y="9">
 				<animations>
 					<idleground loop="true" speed="0.1f">
 						<idle x="0" y="0" w="32" h="13"/>
@@ -300,6 +300,16 @@
 				</animations>
 			</bossenemy>
 		</enemy>
+		<item>
+			<cookie x="432" y="144" texturepath="Assets/Textures/Items/cookie.png"/>
+			<cookie x="1616" y="128" texturepath="Assets/Textures/Items/cookie.png"/>
+			<cookie x="3248" y="256" texturepath="Assets/Textures/Items/cookie.png"/>
+			<cookie x="4240" y="32" texturepath="Assets/Textures/Items/cookie.png"/>
+			<cookie x="4784" y="48" texturepath="Assets/Textures/Items/cookie.png"/>
+			<life x="2176" y="240" texturepath="Assets/Textures/Items/1up.png"/>
+			<checkpoint x="186" y="202" texturepath="Assets/Textures/Items/checkpoint.png"/>
+			<checkpoint x="3546" y="74" texturepath="Assets/Textures/Items/checkpoint.png"/>
+		</item>
 	</scene2>
 
 </config>

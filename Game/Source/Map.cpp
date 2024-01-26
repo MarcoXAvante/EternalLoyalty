@@ -116,17 +116,18 @@ bool Map::CleanUp()
 {
     LOG("Unloading map");
 
-    // L05: DONE 2: Make sure you clean up any memory allocated from tilesets/map
+    // L05: DONE 2: Make sure you clean up any memory allocated from tilesets/mapç
     ListItem<TileSet*>* tileset;
     tileset = mapData.tilesets.start;
     
     while (tileset != NULL) {
+        app->tex->UnLoad(tileset->data->texture);
+        tileset->data->texture = nullptr;
         RELEASE(tileset->data);
         tileset = tileset->next;
     }
 
     mapData.tilesets.Clear();
-
     // L06: DONE 2: clean up all layer data
     ListItem<MapLayer*>* layerItem;
     layerItem = mapData.layers.start;
@@ -136,6 +137,24 @@ bool Map::CleanUp()
         RELEASE(layerItem->data);
         layerItem = layerItem->next;
     }
+
+    mapData.layers.Clear();
+
+    ListItem<PhysBody*>* collisions;
+    collisions = mapData.colliders.start;
+
+    while (collisions != NULL) {
+        app->physics->DestroyBody(collisions->data->body);
+        RELEASE(collisions->data);
+        collisions = collisions->next;
+    }
+
+    mapData.colliders.Clear();
+
+    mapData.height = 0;
+    mapData.width = 0;
+    mapData.tileheight = 0;
+    mapData.tilewidth = 0;
 
     return true;
 }
@@ -245,6 +264,7 @@ bool Map::Load(SString mapFileName)
 
             PhysBody* c1 = app->physics->CreateChain(x, y, intArray, intVector.size(), STATIC);
             c1->ctype = ColliderType::PLATFORM;
+            mapData.colliders.Add(c1);
         }
 
         for (pugi::xml_node ramps = mapFileXML.child("map").child("objectgroup").next_sibling().child("object"); ramps != NULL; ramps = ramps.next_sibling("object")) {
@@ -271,6 +291,7 @@ bool Map::Load(SString mapFileName)
 
             PhysBody* c1 = app->physics->CreateChain(x, y, intArray, intVector.size(), STATIC);
             c1->ctype = ColliderType::RAMP;
+            mapData.colliders.Add(c1);
         }
         // L07 DONE 3: Create colliders      
         // L07 DONE 7: Assign collider type
