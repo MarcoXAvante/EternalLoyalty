@@ -31,6 +31,7 @@ The game is about a dog trying to arrive to his owner. To do so, he will adventu
  - F4 to die and trigger die animation, or revive if you're dead.
  - F5 to save snapshot.
  - F6 to load snapshot.
+ - F8 button hitbox.
  - F9 toggle debug.
  - F10 God mode.
  - While in god mode, W to move up and S to move down. Jump is disabled.
