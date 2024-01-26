@@ -32,10 +32,24 @@ bool Item::Start() {
 	
 	// L07 DONE 4: Add a physics to an item - initialize the physics body
 	app->tex->GetSize(texture, texW, texH);
-	pbody = app->physics->CreateCircle(position.x + texH / 2, position.y + texH / 2, texH / 2, bodyType::DYNAMIC);
 
-	// L07 DONE 7: Assign collider type
-	pbody->ctype = ColliderType::ITEM;
+	int width = 32;
+	int height = 32;
+
+	if (type == ItemType::COOKIE) {
+		pbody = app->physics->CreateCircleSensor(position.x + width / 2, position.y + height / 2, 12, bodyType::KINEMATIC, ColliderType::ITEM_COOKIE);
+	}
+
+	if (type == ItemType::LIFE) {
+		pbody = app->physics->CreateCircleSensor(position.x + width / 2, position.y + height / 2, 14, bodyType::KINEMATIC, ColliderType::ITEM_LIFE);
+	}
+
+	if (type == ItemType::CHECKPOINT) {
+		pbody = app->physics->CreateRectangleSensor(position.x, position.y, 60, 49, bodyType::KINEMATIC, ColliderType::ITEM_CHECKPOINT);
+		this->number = parameters.attribute("number").as_int();
+	}
+
+	pbody->listener = this;
 
 	return true;
 }
@@ -56,4 +70,51 @@ bool Item::Update(float dt)
 bool Item::CleanUp()
 {
 	return true;
+}
+
+void Item::OnCollision(PhysBody* physA, PhysBody* physB) {
+
+	switch (physB->ctype)
+	{
+	case ColliderType::ITEM_COOKIE:
+		LOG("Collision ITEM_COOKIE");
+
+		break;
+	case ColliderType::ITEM_LIFE:
+		LOG("Collision ITEM_LIFE");
+
+		break;
+	case ColliderType::PLATFORM:
+		LOG("Collision PLATFORM");
+
+		break;
+	case ColliderType::UNKNOWN:
+		LOG("Collision UNKNOWN");
+
+		break;
+
+	case ColliderType::PLAYER:
+		LOG("Collision PLAYER");
+
+		if (type == ItemType::COOKIE || type == ItemType::LIFE) {
+			pbody->body->DestroyFixture(pbody->body->GetFixtureList());
+			Disable();
+			pbody->body->SetActive(false);
+		}
+
+		if (type == ItemType::CHECKPOINT) {
+
+			if (!checkpoint) app->audio->PlayFx(checkpointFX);
+
+			checkpoint = true;
+
+			app->scene->player->checkPos = { position.x, position.y };
+
+			app->SaveRequest();
+		}
+
+		break;
+
+	}
+
 }

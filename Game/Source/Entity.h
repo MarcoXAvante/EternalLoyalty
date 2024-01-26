@@ -13,6 +13,7 @@ enum class EntityType
 	ENEMY,
 	ENEMYAIR,
 	ENEMYGROUND,
+	ENEMYBOSS,
 	UNKNOWN
 };
 

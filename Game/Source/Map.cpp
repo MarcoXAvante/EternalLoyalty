@@ -4,6 +4,8 @@
 #include "Textures.h"
 #include "Map.h"
 #include "Physics.h"
+#include "Scene.h"
+#include "Scene2.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -37,7 +39,6 @@ bool Map::Start() {
     SString mapPath = path;
     mapPath += name;
     Load(mapPath);
-
     //Initialize pathfinding 
     pathfinding = new PathFinding();
 
@@ -385,7 +386,7 @@ void Map::CreateNavigationMap(int& width, int& height, uchar** buffer) const
 
             //If the gid is a blockedGid is an area that I cannot navigate, so is set in the navigation map as 0, all the other areas can be navigated
             //!!!! make sure that you assign blockedGid according to your map
-            if (gid == blockedGid) navigationMap[i] = 0;
+            if (gid == blockedGid || gid == blockedGid2) navigationMap[i] = 0;
             else navigationMap[i] = 1;
         }
     }

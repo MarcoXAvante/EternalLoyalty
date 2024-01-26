@@ -18,31 +18,37 @@
 
 #include "SDL_mixer/include/SDL_mixer.h"
 
-Scene::Scene(bool startEnabled) : Module(startEnabled)
+Scene2::Scene2(bool startEnabled) : Module(startEnabled)
 {
-	name.Create("scene");
+	name.Create("scene2");
+	this->active = startEnabled;
 }
 
 // Destructor
-Scene::~Scene()
+Scene2::~Scene2()
 {}
 
 // Called before render is available
-bool Scene::Awake(pugi::xml_node config)
+bool Scene2::Awake(pugi::xml_node config)
 {
 	LOG("Loading Scene");
 	bool ret = true;
 	this->config = config;
 	//L03: DONE 3b: Instantiate the player using the entity manager
 	//L04 DONE 7: Get player paremeters
-	player = (Player*) app->entityManager->CreateEntity(EntityType::PLAYER);
+
+
+	player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 	//Assigns the XML node to a member in player
 	player->config = config.child("player");
 
 	//Get the map name from the config file and assigns the value in the module
 	app->map->name = config.child("map").attribute("name").as_string();
 	app->map->path = config.child("map").attribute("path").as_string();
-
+	//Get the size of the window
+	app->win->GetWindowSize(windowW, windowH);
+	//Get the size of the texture
+	app->tex->GetSize(img, texW, texH);
 
 	pugi::xml_node enemyNode = config.child("enemy");
 	//GroundEnemy
@@ -58,8 +64,7 @@ bool Scene::Awake(pugi::xml_node config)
 		Enemy* AirEnemy = (Enemy*)app->entityManager->CreateEntity(EntityType::ENEMYAIR);
 		AirEnemy->parameters = airNode;
 	}
-
-	//BossEnemy (for testing)
+	//BossEnemy
 	for (pugi::xml_node bossNode = enemyNode.child("bossenemy"); bossNode; bossNode = bossNode.next_sibling("bossnode")) {
 		Enemy* BossEnemy = (Enemy*)app->entityManager->CreateEntity(EntityType::ENEMYBOSS);
 		BossEnemy->parameters = bossNode;
@@ -88,24 +93,16 @@ bool Scene::Awake(pugi::xml_node config)
 		item->parameters = checkNode;
 		item->type = ItemType::CHECKPOINT;
 	}
-	// iterate all items in the scene
-	// check https://pugixml.org/docs/quickstart.html#access
-
 	return ret;
 }
 
 // Called before the first frame
-bool Scene::Start()
+bool Scene2::Start()
 {
 	// NOTE: We have to avoid the use of paths in the code, we will move it later to a config file
-	
+
 	//Music is commented so that you can add your own music
 	//app->audio->PlayMusic("Assets/Audio/Music/music_spy.ogg");
-
-	//Get the size of the window
-	app->win->GetWindowSize(windowW, windowH);
-	//Get the size of the texture
-	app->tex->GetSize(img, texW, texH);
 
 
 	startMusic = true;
@@ -117,7 +114,7 @@ bool Scene::Start()
 	backTex = app->tex->Load("Assets/UI/back.png");
 	sliderTex = app->tex->Load("Assets/UI/slider.png");
 	checkBoxTex = app->tex->Load("Assets/UI/checkBox.png");
-	optionsTex = app->tex->Load("Assets/Textures/Fondos/menusetting.png");
+	optionsTex = app->tex->Load("Assets/Textures/OptionsScreenFromPause.png");
 
 	resume = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, resumeTex, "", { 125,100,117,24 }, this);
 	settings = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, settingsTex, "", { 125,130,144,24 }, this);
@@ -145,8 +142,9 @@ bool Scene::Start()
 }
 
 // Called each loop iteration
-bool Scene::PreUpdate()
+bool Scene2::PreUpdate()
 {
+
 	if (startMusic) {
 		app->audio->PlayMusic(config.child("music").attribute("path").as_string(), 1.0f);
 		startMusic = false;
@@ -155,11 +153,11 @@ bool Scene::PreUpdate()
 }
 
 // Called each loop iteration
-bool Scene::Update(float dt)
+bool Scene2::Update(float dt)
 {
 
 	int limitCamX = ((player->position.x * app->win->scale - (windowW / 2)));
-	if (limitCamX > 0 && limitCamX < (app->map->getMapWidth() - windowW / 2) * app->win->scale) {
+	if (limitCamX > 0 && limitCamX < (app->map->getMapWidth() - windowW) * app->win->scale) {
 		app->render->camera.x = (player->position.x * app->win->scale - (windowW / 2)) * -1;
 	}
 
@@ -172,7 +170,7 @@ bool Scene::Update(float dt)
 
 	/*
 	//L02 DONE 3: Make the camera movement independent of framerate
-	float camSpeed = 1; 
+	float camSpeed = 1;
 
 	if(app->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		app->render->camera.y -= (int)ceil(camSpeed * dt);
@@ -221,17 +219,6 @@ bool Scene::Update(float dt)
 
 		paused = false;
 
-		app->render->camera.y = ((player->initialPos.y - texH / 2) - (app->scene->windowH / 2)) * -1;
-		app->render->camera.x = ((player->initialPos.x - texW / 2) - (app->scene->windowW / 2)) * -1;
-
-
-		if (app->render->camera.x >= 0) {
-			app->render->camera.x = 0;
-		}
-		if (app->render->camera.y >= 0) {
-			app->render->camera.y = 0;
-		}
-
 		if (resume->state != GuiControlState::DISABLED) resume->state = GuiControlState::DISABLED;
 		if (settings->state != GuiControlState::DISABLED) settings->state = GuiControlState::DISABLED;
 		if (backToTitle->state != GuiControlState::DISABLED) backToTitle->state = GuiControlState::DISABLED;
@@ -260,7 +247,8 @@ bool Scene::Update(float dt)
 		SDL_SetWindowFullscreen(app->win->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 		SDL_RenderSetLogicalSize(app->render->renderer, 1140, 640);
 
-	} else {
+	}
+	else {
 
 		app->sceneMenu->checkBoxFullscreen->crossed = false;
 		SDL_SetWindowFullscreen(app->win->window, 0);
@@ -271,7 +259,8 @@ bool Scene::Update(float dt)
 		app->sceneMenu->checkBoxVsync->crossed = true;
 		SDL_GL_SetSwapInterval(1);
 
-	} else {
+	}
+	else {
 
 		app->sceneMenu->checkBoxVsync->crossed = false;
 		SDL_GL_SetSwapInterval(0);
@@ -297,13 +286,9 @@ bool Scene::Update(float dt)
 }
 
 // Called each loop iteration
-bool Scene::PostUpdate()
+bool Scene2::PostUpdate()
 {
 	bool ret = true;
-
-	app->render->DrawText("Score: " + std::to_string((int)score), 10, 10, 300, 70, { 0,0,0 });
-
-	app->render->DrawText("Lives: " + std::to_string((int)player->lives), 310, 10, 300, 70, { 0,0,0 });
 
 	if (time.ReadSec() < 10) {
 
@@ -322,6 +307,8 @@ bool Scene::PostUpdate()
 	}
 
 	if (paused) {
+
+		app->render->DrawTexture(pauseTex, -app->render->camera.x, -app->render->camera.y);
 
 		if (resume->state == GuiControlState::DISABLED) resume->state = GuiControlState::NORMAL;
 		if (settings->state == GuiControlState::DISABLED) settings->state = GuiControlState::NORMAL;
@@ -354,7 +341,8 @@ bool Scene::PostUpdate()
 			sliderFX->Draw(app->render);
 			checkBoxFullscreen->Draw(app->render);
 			checkBoxVsync->Draw(app->render);
-		} else {
+		}
+		else {
 
 			if (resume->state == GuiControlState::DISABLED) resume->state = GuiControlState::NORMAL;
 			if (settings->state == GuiControlState::DISABLED) settings->state = GuiControlState::NORMAL;
@@ -369,7 +357,8 @@ bool Scene::PostUpdate()
 
 		}
 
-	} else {
+	}
+	else {
 
 		if (resume->state != GuiControlState::DISABLED) resume->state = GuiControlState::DISABLED;
 		if (settings->state != GuiControlState::DISABLED) settings->state = GuiControlState::DISABLED;
@@ -386,7 +375,7 @@ bool Scene::PostUpdate()
 }
 
 // Called before quitting
-bool Scene::CleanUp()
+bool Scene2::CleanUp()
 {
 	LOG("Freeing scene");
 

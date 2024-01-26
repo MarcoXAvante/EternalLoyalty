@@ -41,12 +41,15 @@ public:
 	//L02: DONE 2: Declare player parameters
 	bool grounded;
 	bool ramp;
+	bool gameover;
+	bool damage;
 	float speed = 0.2f;
 	SDL_Texture* texture = NULL;
 	pugi::xml_node config;
 	uint texW, texH;
 	bool god = false;
 
+	iPoint checkPos;
 
 	Animation walkingDog;
 	Animation idleDog;
@@ -56,9 +59,11 @@ public:
 	Animation* currentAnimation = nullptr;
 
 	bool flip;
+	int lives;
 	int remainingJumpSteps = 0;
 	int jumpForceReduce = 0;
 	int maxJumpSteps = 30;
+	int checkpoint = 0;
 
 	//Audio fx
 	int pickCoinFxId;

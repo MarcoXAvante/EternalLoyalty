@@ -5,6 +5,12 @@
 #include "Point.h"
 #include "SDL/include/SDL.h"
 
+enum class ItemType {
+	COOKIE,
+	LIFE,
+	CHECKPOINT
+};
+
 struct SDL_Texture;
 
 class Item : public Entity
@@ -22,11 +28,11 @@ public:
 
 	bool CleanUp();
 
+	void OnCollision(PhysBody* physA, PhysBody* physB);
+
 public:
 
 	bool isPicked = false;
-
-private:
 
 	SDL_Texture* texture;
 	const char* texturePath;
@@ -34,6 +40,12 @@ private:
 
 	//L07 DONE 4: Add a physics to an item
 	PhysBody* pbody;
+
+	ItemType type;
+	int number;
+
+	bool checkpoint;
+	uint checkpointFX;
 };
 
 #endif // __ITEM_H__

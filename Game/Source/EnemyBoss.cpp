@@ -1,34 +1,38 @@
-#include "EnemyGround.h"
+#include "EnemyBoss.h"
 #include "Scene.h"
 #include "Log.h"
 #include "Audio.h"
 
-EnemyGround::EnemyGround() :Enemy()
+EnemyBoss::EnemyBoss() :Enemy()
 {
 
 }
 
-bool EnemyGround::Awake()
+EnemyBoss::~EnemyBoss() {
+
+}
+
+bool EnemyBoss::Awake()
 {
 	Enemy::Awake();
-	idleGround.loop = parameters.child("animations").child("idleground").attribute("loop").as_bool();
-	idleGround.speed = parameters.child("animations").child("idleground").attribute("speed").as_float();
+	idleGround.loop = parameters.child("animations").child("idleboss").attribute("loop").as_bool();
+	idleGround.speed = parameters.child("animations").child("idleboss").attribute("speed").as_float();
 
-	for (pugi::xml_node animNode = parameters.child("animations").child("idleground").child("idle"); animNode != NULL; animNode = animNode.next_sibling("idle")) {
+	for (pugi::xml_node animNode = parameters.child("animations").child("idleboss").child("idle"); animNode != NULL; animNode = animNode.next_sibling("idle")) {
 		idleGround.PushBack({ animNode.attribute("x").as_int(), animNode.attribute("y").as_int() ,animNode.attribute("w").as_int() ,animNode.attribute("h").as_int() });
 	}
 
-	walkingGround.loop = parameters.child("animations").child("moveground").attribute("loop").as_bool();
-	walkingGround.speed = parameters.child("animations").child("moveground").attribute("speed").as_float();
+	walkingGround.loop = parameters.child("animations").child("moveboss").attribute("loop").as_bool();
+	walkingGround.speed = parameters.child("animations").child("moveboss").attribute("speed").as_float();
 
-	for (pugi::xml_node animNode = parameters.child("animations").child("moveground").child("walk"); animNode != NULL; animNode = animNode.next_sibling("walk")) {
+	for (pugi::xml_node animNode = parameters.child("animations").child("moveboss").child("walk"); animNode != NULL; animNode = animNode.next_sibling("walk")) {
 		walkingGround.PushBack({ animNode.attribute("x").as_int(), animNode.attribute("y").as_int() ,animNode.attribute("w").as_int() ,animNode.attribute("h").as_int() });
 	}
 
-	dieGround.loop = parameters.child("animations").child("dieground").attribute("loop").as_bool();
-	dieGround.speed = parameters.child("animations").child("dieground").attribute("speed").as_float();
+	dieGround.loop = parameters.child("animations").child("dieboss").attribute("loop").as_bool();
+	dieGround.speed = parameters.child("animations").child("dieboss").attribute("speed").as_float();
 
-	for (pugi::xml_node animNode = parameters.child("animations").child("dieground").child("die"); animNode != NULL; animNode = animNode.next_sibling("die")) {
+	for (pugi::xml_node animNode = parameters.child("animations").child("dieboss").child("die"); animNode != NULL; animNode = animNode.next_sibling("die")) {
 		dieGround.PushBack({ animNode.attribute("x").as_int(), animNode.attribute("y").as_int() ,animNode.attribute("w").as_int() ,animNode.attribute("h").as_int() });
 	}
 
@@ -36,15 +40,15 @@ bool EnemyGround::Awake()
 	return true;
 }
 
-bool EnemyGround::Start()
+bool EnemyBoss::Start()
 {
-	distChase = 10;
+	distChase = 30;
 	initPosition = position;
 	texture = app->tex->Load(texturePath);
 	currentAnimation = &walkingGround;
 
 	// L07 DONE 5: Add physics to the player - initialize physics body
-	pbody = app->physics->CreateCircle(position.x, position.y, currentAnimation->GetCurrentFrame().h/2, bodyType::DYNAMIC);
+	pbody = app->physics->CreateCircle(position.x, position.y, currentAnimation->GetCurrentFrame().h / 2, bodyType::DYNAMIC);
 
 	// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	pbody->listener = this;
@@ -62,7 +66,7 @@ bool EnemyGround::Start()
 	return true;
 }
 
-bool EnemyGround::Update(float dt)
+bool EnemyBoss::Update(float dt)
 {
 	if (abs(app->scene->GetPlayer()->getPlayerTileX() - getEnemyTileX()) > 50) {
 		velocity.x = 0;
@@ -72,8 +76,15 @@ bool EnemyGround::Update(float dt)
 	}
 	velocity = b2Vec2(0, 10);
 
+	if (pbody->body->GetContactList() == NULL) {
+		grounded = false;
+	}
+	else {
+		grounded = true;
+	}
+
 	if (!hit) {
-		if (canChase(distChase) && PTileX >= Patrol1.x && PTileX <= Patrol2.x && PTileY <= Patrol1.y) {
+		if (canChase(distChase) && PTileX >= Patrol1.x && PTileX <= Patrol2.x) {
 			ActualVelocity = chaseVelovity;
 			dest = iPoint(PTileX, PTileY);
 			moveToPlayer(dt);
@@ -102,7 +113,7 @@ bool EnemyGround::Update(float dt)
 	return true;
 }
 
-void EnemyGround::moveToPlayer(float dt)
+void EnemyBoss::moveToPlayer(float dt)
 {
 	const DynArray<iPoint>* path = SearchWay();
 	//check if t has arrivied
@@ -110,34 +121,22 @@ void EnemyGround::moveToPlayer(float dt)
 		//check if it shall move to x
 		if (TileX > path->At(1)->x) {
 			velocity.x = -ActualVelocity * dt;
-			if (ramp && !dead) {
-				velocity.y = -0.01 * dt;
-			}
 		}
 		else {
 			velocity.x = ActualVelocity * dt;
-			if (ramp && !dead) {
-				velocity.y = -0.01 * dt;
-			}
 		}
 	}
 	else if (path->Count() == 1) {
 		if (app->scene->GetPlayer()->position.x < position.x) {
 			velocity.x = -ActualVelocity * dt;
-			if (ramp && !dead) {
-				velocity.y = -0.01 * dt;
-			}
 		}
 		else {
 			velocity.x = ActualVelocity * dt;
-			if (ramp && !dead) {
-				velocity.y = -0.01 * dt;
-			}
 		}
 	}
 }
 
-void EnemyGround::OnCollision(PhysBody* physA, PhysBody* physB)
+void EnemyBoss::OnCollision(PhysBody* physA, PhysBody* physB)
 {
 	switch (physB->ctype)
 	{
@@ -148,8 +147,6 @@ void EnemyGround::OnCollision(PhysBody* physA, PhysBody* physB)
 		if (!dead) {
 			app->audio->PlayFx(deathFX);
 		}
-		pbody->body->SetActive(false);
-		app->scene->score += 20;
 		break;
 	case ColliderType::DEADLY:
 		hit = true;
@@ -159,24 +156,14 @@ void EnemyGround::OnCollision(PhysBody* physA, PhysBody* physB)
 			app->audio->PlayFx(deathFX);
 		}
 		break;
-	case ColliderType::RAMP:
-		ramp = true;
+	case ColliderType::PLATFORM:
 		break;
 	default:
 		break;
 	}
 }
 
-void EnemyGround::EndCollision(PhysBody* physA, PhysBody* physB) {
-	switch (physB->ctype)
-	{
-	case ColliderType::RAMP:
-		ramp = false;
-		break;
-	}
-}
-
-void EnemyGround::moveToPoint(float dt)
+void EnemyBoss::moveToPoint(float dt)
 {
 	Enemy::Patrol();
 	const DynArray<iPoint>* path = SearchWay();
@@ -185,31 +172,17 @@ void EnemyGround::moveToPoint(float dt)
 		//check if it shall move to x
 		if (TileX > path->At(1)->x) {
 			velocity.x = -ActualVelocity * dt;
-			if (grounded && !dead) {
-				velocity.y = -0.001 * dt;
-			}
 		}
 		else {
 			velocity.x = ActualVelocity * dt;
-			if (grounded && !dead) {
-				velocity.y = -0.001 * dt;
-			}
 		}
 	}
 	else if (path->Count() == 1) {
 		if (app->scene->GetPlayer()->position.x < position.x) {
 			velocity.x = -ActualVelocity * dt;
-			if (grounded && !dead) {
-				velocity.y = -0.001 * dt;
-			}
 		}
 		else {
 			velocity.x = ActualVelocity * dt;
-			if (grounded && !dead) {
-				velocity.y = -0.001 * dt;
-			}
 		}
 	}
 }
-
-

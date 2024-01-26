@@ -1,21 +1,27 @@
 #pragma once
+
 #include "Module.h"
+#include "Player.h"
 #include "GuiManager.h"
 #include "GuiButton.h"
 #include "GuiSlider.h"
 #include "GuiCheckBox.h"
+#include <iostream>
+#include "Timer.h"
 
 struct SDL_Texture;
 
-class SceneMenu : public Module
+class Scene2 : public Module
 {
 public:
-	SceneMenu(bool startEnabled);
 
-	virtual ~SceneMenu();
+	Scene2(bool startEnabled);
+
+	// Destructor
+	virtual ~Scene2();
 
 	// Called before render is available
-	bool Awake(pugi::xml_node& config);
+	bool Awake(pugi::xml_node config);
 
 	// Called before the first frame
 	bool Start();
@@ -32,36 +38,43 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	Player* GetPlayer() {
+		return player;
+	}
+
 public:
-	int font = -1;
+	SDL_Texture* img;
+	float textPosX, textPosY = 0;
+	uint texW, texH;
+	uint windowW, windowH;
+
+	pugi::xml_node config;
+	//L03: DONE 3b: Declare a Player attribute
+	Player* player;
+
+	bool pauseMenu;
+	bool paused;
 	bool startMusic;
-	bool canContinue;
-	bool settingsMenu;
-	bool showCredits;
-
-	SDL_Texture* background;
-
-	GuiButton* play;
-	GuiButton* continueButton;
+	GuiButton* resume;
 	GuiButton* settings;
-	GuiButton* credits;
+	GuiButton* backToTitle;
 	GuiButton* exit;
 	GuiButton* back;
-	GuiButton* back2;
 	GuiSlider* sliderMusic;
 	GuiSlider* sliderFX;
 	GuiCheckBox* checkBoxFullscreen;
 	GuiCheckBox* checkBoxVsync;
-	SDL_Texture* playTex;
-	SDL_Texture* continueTex;
+	SDL_Texture* pauseTex;
+	SDL_Texture* optionsTex;
+	SDL_Texture* resumeTex;
 	SDL_Texture* settingsTex;
-	SDL_Texture* creditsTex;
+	SDL_Texture* backToTitleTex;
 	SDL_Texture* exitTex;
 	SDL_Texture* backTex;
 	SDL_Texture* sliderTex;
 	SDL_Texture* checkBoxTex;
-	SDL_Texture* settingsbg;
 
-	pugi::xml_document saveFile;
-	pugi::xml_parse_result result;
+	Timer time;
+	int score;
+	int previoustime = 0;
 };

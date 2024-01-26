@@ -5,6 +5,8 @@
 #include "Defs.h"
 #include "Log.h"
 
+#include "SDL_ttf/include/SDL_ttf.h"
+
 #define VSYNC true
 
 Render::Render(bool startEnabled) : Module(startEnabled)

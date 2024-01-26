@@ -20,7 +20,6 @@
     <ClCompile Include="Source\EntityManager.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\Map.cpp" />
-    <ClCompile Include="Source\Item.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\Pathfinding.cpp" />
     <ClCompile Include="Source\Enemy.cpp" />
@@ -34,6 +33,10 @@
     <ClCompile Include="Source\FadeToBlack.cpp" />
     <ClCompile Include="Source\Fonts.cpp" />
     <ClCompile Include="Source\SceneMenu.cpp" />
+    <ClCompile Include="Source\Item.cpp" />
+    <ClCompile Include="Source\Scene2.cpp" />
+    <ClCompile Include="Source\GameOverScene.cpp" />
+    <ClCompile Include="Source\EnemyBoss.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window.h" />
@@ -77,7 +80,6 @@
     <ClInclude Include="Source\EntityManager.h" />
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\Map.h" />
-    <ClInclude Include="Source\Item.h" />
     <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\Animation.h" />
     <ClInclude Include="Source\Pathfinding.h" />
@@ -93,6 +95,10 @@
     <ClInclude Include="Source\FadeToBlack.h" />
     <ClInclude Include="Source\Fonts.h" />
     <ClInclude Include="Source\SceneMenu.h" />
+    <ClInclude Include="Source\Item.h" />
+    <ClInclude Include="Source\Scene2.h" />
+    <ClInclude Include="Source\GameOverScene.h" />
+    <ClInclude Include="Source\EnemyBoss.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">

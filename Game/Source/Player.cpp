@@ -2,9 +2,11 @@
 #include "App.h"
 #include "Textures.h"
 #include "Audio.h"
+#include "FadeToBlack.h"
 #include "Input.h"
 #include "Render.h"
 #include "Scene.h"
+#include "GameOverScene.h"
 #include "Log.h"
 #include "Point.h"
 #include "Physics.h"
@@ -26,6 +28,7 @@ bool Player::Awake() {
 	//L03: DONE 2: Initialize Player parameters
 	initialPos = iPoint(config.attribute("x").as_int(), config.attribute("y").as_int());
 	position = initialPos;
+	checkPos = initialPos;
 
 	idleDog.loop = config.child("animations").child("idledog").attribute("loop").as_bool();
 	idleDog.speed = config.child("animations").child("idledog").attribute("speed").as_float();
@@ -74,19 +77,21 @@ bool Player::Start() {
 	app->tex->GetSize(texture, texW, texH);
 	pbody = app->physics->CreateCircle(initialPos.x, initialPos.y, 16, bodyType::DYNAMIC);
 	pbody->body->SetFixedRotation(true);
-	bark = app->physics->CreateRectangleSensor(0, 0, 34, 50, bodyType::DYNAMIC);
+	bark = app->physics->CreateRectangleSensor(0, 0, 34, 50, bodyType::DYNAMIC, ColliderType::BARK);
 	bark->listener = this;
 	// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	pbody->listener = this;
 
 	// L07 DONE 7: Assign collider type
 	pbody->ctype = ColliderType::PLAYER;
-	bark->ctype = ColliderType::BARK;
 	bark->body->SetLinearVelocity({ 0,0 });
 	bark->body->SetGravityScale(0);
 
 	//initialize audio effect
 	pickCoinFxId = app->audio->LoadFx(config.attribute("coinfxpath").as_string());
+
+	lives = 3;
+
 	currentAnimation = &idleDog;
 	return true;
 }
@@ -189,6 +194,10 @@ bool Player::Update(float dt)
 	}
 	else {
 		currentAnimation = &dieDog;
+
+		if (lives == 1) {
+			gameover = true;
+		}
 	}
 
 	if (attackDog.HasFinished() || currentAnimation != &attackDog) {
@@ -286,6 +295,52 @@ bool Player::Update(float dt)
 	}
 	app->render->DrawTextureDX(texture, position.x, position.y, flip, &currentAnimation->GetCurrentFrame());
 
+	if (gameover || app->scene->time.ReadSec() == 500 /* || app->scene2->time.ReadSec() + app->scene2->previoustime == 500*/ ) {
+
+		app->render->camera.y = ((initialPos.y - texH / 2) - (app->scene->windowH / 2)) * -1;
+		app->render->camera.x = ((initialPos.x - texW / 2) - (app->scene->windowW / 2)) * -1;
+
+
+		if (app->render->camera.x >= 0) {
+			app->render->camera.x = 0;
+		}
+		if (app->render->camera.y >= 0) {
+			app->render->camera.y = 0;
+		}
+
+		app->fadeToBlack->Fade(app->scene, app->gameoverscene, 0);
+		app->map->Disable();
+	}
+
+	if (dieDog.HasFinished()) {
+		pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(checkPos.x), PIXEL_TO_METERS(checkPos.y)), pbody->body->GetAngle());
+		position = checkPos;
+
+		damage = true;
+
+		if (dead) {
+			dead = false;
+		}
+
+		if (damage) {
+			lives -= 1;
+			damage = false;
+		}
+
+		app->render->camera.y = ((position.y - texH / 2) - (app->scene->windowH / 2)) * -1;
+		app->render->camera.x = ((position.x - texW / 2) - (app->scene->windowW / 2)) * -1;
+
+		currentAnimation = &idleDog;
+		dieDog.Reset();
+
+		if (app->render->camera.x >= 0) {
+			app->render->camera.x = 0;
+		}
+		if (app->render->camera.y >= 0) {
+			app->render->camera.y = 0;
+		}
+	}
+
 	return true;
 }
 
@@ -319,16 +374,25 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
  		grounded = true;
 		LOG("Collision PLATFORM");
 		break;
-	case ColliderType::ITEM:
-		LOG("Collision ITEM");
-		app->audio->PlayFx(pickCoinFxId);
+	case ColliderType::ITEM_COOKIE:
+		LOG("Collision ITEM_COOKIE");
+		app->scene->score += 10;
 		break;
+	case ColliderType::ITEM_LIFE:
+		LOG("Collision ITEM_LIFE");
+		if (lives < 3) {
+			lives++;
+		}
+		else {
+			app->scene->score += 50;
+		}
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;
 	case ColliderType::ENEMY:
 		if (physA == pbody) {
 			dead = true;
+			damage = true;
 		}
 		break;
 	case ColliderType::BARK:

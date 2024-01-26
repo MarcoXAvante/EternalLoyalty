@@ -5,6 +5,7 @@
 #include "Map.h"
 #include "SceneMenu.h"
 #include "Scene.h"
+#include "Scene2.h"
 #include "Window.h"
 #include "Player.h"
 
@@ -44,6 +45,7 @@ bool SceneMenu::Start() {
 	backTex = app->tex->Load("Assets/UI/back.png");
 	sliderTex = app->tex->Load("Assets/UI/slider.png");
 	checkBoxTex = app->tex->Load("Assets/UI/checkbox.png");
+	settingsbg = app->tex->Load("Assets/Textures/Fondos/menusetting.png");
 	
 	play = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, playTex, "", { 427/3 + 130, 375/3, 160/2, 49/2 }, this);
 	continueButton = (GuiButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, continueTex, "", { 360/3 + 120,452/3,301/2,49/2 }, this);
@@ -97,12 +99,14 @@ bool SceneMenu::Update(float dt) {
 	}
 
 	if (play->state == GuiControlState::PRESSED) {
+		
 		startMusic = true;
 
 		app->scene->time.Start();
 		app->scene->score = 0;
 
 		app->scene->player->position = app->scene->player->initialPos;
+		app->scene->player->lives = 3;
 
 		app->fadeToBlack->Fade(this, (Module*)app->scene, 0);
 		app->map->Enable();
@@ -200,7 +204,7 @@ bool SceneMenu::PostUpdate() {
 		if (credits->state != GuiControlState::DISABLED) credits->state = GuiControlState::DISABLED;
 		if (exit->state != GuiControlState::DISABLED) exit->state = GuiControlState::DISABLED;
 
-		//app->render->DrawTexture(settingsTex, 0, 0);
+		app->render->DrawTexture(settingsbg, 0, 0);
 
 		back->Draw(app->render);
 		sliderMusic->Draw(app->render);

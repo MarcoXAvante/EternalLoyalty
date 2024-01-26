@@ -1,9 +1,12 @@
 #pragma once
 #include "Enemy.h"
-class EnemyGround : public Enemy
+class EnemyBoss : public Enemy
 {
 public:
-	EnemyGround();
+	EnemyBoss();
+
+	~EnemyBoss();
+
 	bool Awake();
 
 	bool Start();
@@ -14,15 +17,12 @@ public:
 
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
-	void EndCollision(PhysBody* physA, PhysBody* physB);
-
 	void moveToPoint(float dt);
 
 	Animation idleGround;
 	Animation walkingGround;
 	Animation dieGround;
 	bool grounded;
-	bool ramp;
 	int deathFX;
 };
 

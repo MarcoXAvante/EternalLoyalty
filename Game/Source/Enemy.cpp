@@ -50,6 +50,9 @@ bool Enemy::Update(float dt)
 
 	app->render->DrawTextureDX(texture, position.x, position.y, flip, &currentAnimation->GetCurrentFrame());
 				
+	if (dead) {
+		pbody->body->SetActive(false);
+	}
 
  	currentAnimation->Update();
 	

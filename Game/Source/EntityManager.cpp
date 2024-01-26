@@ -1,6 +1,7 @@
 #include "EntityManager.h"
 #include "Player.h"
 #include "EnemyGround.h"
+#include "EnemyBoss.h"
 #include "EnemyAir.h"
 #include "Item.h"
 #include "App.h"
@@ -96,6 +97,9 @@ Entity* EntityManager::CreateEntity(EntityType type)
 		break;
 	case EntityType::ENEMYAIR:
 		entity = new EnemyAir();
+		break;
+	case EntityType::ENEMYBOSS:
+		entity = new EnemyBoss();
 		break;
 	default:
 		break;

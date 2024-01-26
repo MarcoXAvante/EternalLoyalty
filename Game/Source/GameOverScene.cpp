@@ -1,6 +1,7 @@
 #include "App.h"
 #include "Textures.h"
-#include "SceneIntro.h"
+#include "Scene.h"
+#include "GameOverScene.h"
 #include "FadeToBlack.h"
 #include "Map.h"
 #include "Window.h"
@@ -8,46 +9,47 @@
 #include "Defs.h"
 #include "Log.h"
 
-SceneIntro::SceneIntro(bool startEnabled) : Module(startEnabled)
+GameOverScene::GameOverScene(bool startEnabled) : Module(startEnabled)
 {
 	name.Create("sceneIntro");
 }
 
-SceneIntro::~SceneIntro()
+GameOverScene::~GameOverScene()
 {}
 
-bool SceneIntro::Awake(pugi::xml_node& config) {
+bool GameOverScene::Awake(pugi::xml_node& config) {
 	LOG("Loading SceneIntro");
 	bool ret = true;
 
 	return ret;
 }
 
-bool SceneIntro::Start() {
-	logo = app->tex->Load("Assets/Textures/Fondos/nocturnals.png");
+bool GameOverScene::Start() {
+	logo = app->tex->Load("Assets/Textures/Fondos/gameover.png");
 	return true;
 }
 
-bool SceneIntro::PreUpdate() {
+bool GameOverScene::PreUpdate() {
 	OPTICK_EVENT();
 	app->entityManager->Disable();
 	return true;
 }
 
-bool SceneIntro::Update(float dt) {
+bool GameOverScene::Update(float dt) {
 	OPTICK_EVENT();
 	if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
+		app->scene->player->lives = 3;
 		app->fadeToBlack->Fade(this, (Module*)app->sceneMenu);
 	}
 	return true;
 }
 
-bool SceneIntro::PostUpdate() {
+bool GameOverScene::PostUpdate() {
 	OPTICK_EVENT();
 
 	bool ret = true;
 
-	app->render->DrawTexture(logo, 3, 1.5);
+	app->render->DrawTexture(logo, app->win->width / 8, 0);
 
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
 		ret = false;
@@ -56,7 +58,7 @@ bool SceneIntro::PostUpdate() {
 	return ret;
 }
 
-bool SceneIntro::CleanUp() {
+bool GameOverScene::CleanUp() {
 	LOG("Cleaning scene");
 
 	return true;

@@ -184,6 +184,8 @@ void EnemyAir::OnCollision(PhysBody* physA, PhysBody* physB)
 		if (!dead) {
 			app->audio->PlayFx(deathFX);
 		}
+		pbody->body->SetActive(false);
+		app->scene->score += 30;
 		break;
 	default:
 		break;

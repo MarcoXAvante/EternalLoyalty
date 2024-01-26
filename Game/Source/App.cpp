@@ -9,6 +9,8 @@
 #include "SceneIntro.h"
 #include "SceneMenu.h"
 #include "Scene.h"
+#include "Scene2.h"
+#include "GameOverScene.h"
 #include "Map.h"
 #include "Physics.h"
 #include "GuiManager.h"
@@ -46,6 +48,8 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	sceneIntro = new SceneIntro(true);
 	sceneMenu = new SceneMenu(false);
 	scene = new Scene(false);
+	scene2 = new Scene2(false);
+	gameoverscene = new GameOverScene(false);
 	map = new Map(false);
 	entityManager = new EntityManager(true);
 	guiManager = new GuiManager(true);
@@ -64,6 +68,8 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(sceneIntro);
 	AddModule(sceneMenu);
 	AddModule(scene);
+	//AddModule(scene2);
+	AddModule(gameoverscene);
 	AddModule(map);
 	AddModule(entityManager);
 	AddModule(guiManager);

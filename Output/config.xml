@@ -142,6 +142,164 @@
 				</animations>
 			</groundenemy>
 		</enemy>
+		<item>
+			<cookie x="416" y="192" texturepath="Assets/Textures/Items/cookie.png"/>
+			<cookie x="752" y="208" texturepath="Assets/Textures/Items/cookie.png"/>
+			<cookie x="1072" y="144" texturepath="Assets/Textures/Items/cookie.png"/>
+			<cookie x="1680" y="224" texturepath="Assets/Textures/Items/cookie.png"/>
+			<cookie x="2720" y="208" texturepath="Assets/Textures/Items/cookie.png"/>
+			<cookie x="3472" y="0" texturepath="Assets/Textures/Items/cookie.png"/>
+			<cookie x="3840" y="112" texturepath="Assets/Textures/Items/cookie.png"/>
+			<cookie x="4704" y="16" texturepath="Assets/Textures/Items/cookie.png"/>
+			<cookie x="4064" y="128" texturepath="Assets/Textures/Items/cookie.png"/>
+			<life x="4192" y="96" texturepath="Assets/Textures/Items/1up.png"/>
+			<checkpoint x="1850" y="250" texturepath="Assets/Textures/Items/checkpoint.png" number="1"/>
+			<checkpoint x="4234" y="42" texturepath="Assets/Textures/Items/checkpoint.png" number="2"/>
+		</item>
 	</scene>
+	<scene2>
+		<player x="32" y="120" texturePath="Assets/Textures/Perrete/Animacion perrete con ataque3.png" barkfxpath="Assets/Audio/Fx/bark.wav" coinfxpath="Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg">
+			<animations>
+				<idledog loop="true" speed="0.1f">
+					<idle x="10" y="7" w="46" h="37"/>
+				</idledog>
+				<walkingdog loop="true" speed="0.20f">
+					<walk x="60" y="58" w="46" h="37"/>
+					<walk x="117" y="58" w="46" h="37"/>
+					<walk x="175" y="58" w="46" h="37"/>
+					<walk x="226" y="58" w="46" h="37"/>
+					<walk x="276" y="58" w="46" h="37"/>
+					<walk x="335" y="58" w="46" h="37"/>
+				</walkingdog>
+				<diedog loop="false" speed="0.10f">
+					<die x="60" y="7" w="46" h="37"/>
+					<die x="115" y="7" w="46" h="37"/>
+					<die x="169" y="7" w="46" h="37"/>
+				</diedog>
+				<jumpdog loop="true" speed="0.20f">
+					<jump x="58" y="106" w="46" h="37"/>
+					<jump x="115" y="106" w="46" h="37"/>
+					<jump x="171" y="106" w="46" h="37"/>
+					<jump x="228" y="106" w="46" h="37"/>
+				</jumpdog>
+				<attackdog loop="false" speed="0.10f">
+					<attack x="10" y="147" w="46" h="37"/>
+					<attack x="58" y="147" w="46" h="37"/>
+					<attack x="112" y="147" w="46" h="37"/>
+					<attack x="173" y="147" w="46" h="37"/>
+				</attackdog>
+			</animations>
+		</player>
+
+		<map path="Assets/Maps/" name="mapa2.tmx"/>
+		<music path="Assets/Audio/Music/level1.wav" />
+
+		<enemy>
+			<airenemy x="1424" y="160" texturepath="Assets/Textures/Enemigos/png sprites.png" deathfxpath="Assets/Audio/Fx/bird.wav" dest1X="88" dest1Y="3" dest2X="92" dest2Y="12">
+				<animations>
+					<idleair loop="true" speed="0.1f">
+						<idle x="0" y="103" w="17" h="15"/>
+						<idle x="35" y="103" w="16" h="15"/>
+					</idleair>
+					<moveair loop="true" speed="0.2f">
+						<fly x="0" y="74" w="24" h="15"/>
+						<fly x="35" y="74" w="25" h="15"/>
+						<fly x="67" y="74" w="24" h="15"/>
+						<fly x="102" y="74" w="25" h="15"/>
+					</moveair>
+					<dieair loop="false" speed="0.1f">
+						<die x="0" y="132" w="17" h="15"/>
+						<die x="35" y="132" w="21" h="15"/>
+						<die x="67" y="132" w="23" h="15"/>
+						<die x="102" y="132" w="24" h="15"/>
+					</dieair>
+				</animations>
+			</airenemy>
+			<airenemy x="2432" y="96" texturepath="Assets/Textures/Enemigos/png sprites.png" deathfxpath="Assets/Audio/Fx/bird.wav" dest1X="142" dest1Y="6" dest2X="166" dest2Y="5">
+				<animations>
+					<idleair loop="true" speed="0.1f">
+						<idle x="0" y="103" w="17" h="15"/>
+						<idle x="35" y="103" w="16" h="15"/>
+					</idleair>
+					<moveair loop="true" speed="0.2f">
+						<fly x="0" y="74" w="24" h="15"/>
+						<fly x="35" y="74" w="25" h="15"/>
+						<fly x="67" y="74" w="24" h="15"/>
+						<fly x="102" y="74" w="25" h="15"/>
+					</moveair>
+					<dieair loop="false" speed="0.1f">
+						<die x="0" y="132" w="17" h="15"/>
+						<die x="35" y="132" w="21" h="15"/>
+						<die x="67" y="132" w="23" h="15"/>
+						<die x="102" y="132" w="24" h="15"/>
+					</dieair>
+				</animations>
+			</airenemy>
+			<groundenemy x="4208" y="144" texturepath="Assets/Textures/Enemigos/png sprites.png" deathfxpath="Assets/Audio/Fx/rat.wav" dest1X="258" dest1Y="10" dest2X="269" dest2Y="10">
+				<animations>
+					<idleground loop="true" speed="0.1f">
+						<idle x="0" y="0" w="32" h="13"/>
+						<idle x="32" y="0" w="32" h="13"/>
+						<idle x="64" y="0" w="32" h="13"/>
+						<idle x="96" y="0" w="32" h="13"/>
+					</idleground>
+					<moveground loop="true" speed="0.2f">
+						<walk x="0" y="49" w="32" h="13"/>
+						<walk x="32" y="49" w="32" h="13"/>
+						<walk x="64" y="49" w="32" h="13"/>
+						<walk x="96" y="49" w="32" h="13"/>
+					</moveground>
+					<dieground loop="false" speed="0.1f">
+						<die x="0" y="26" w="32" h="11"/>
+						<die x="32" y="26" w="32" h="11"/>
+						<die x="64" y="26" w="32" h="11"/>
+						<die x="96" y="26" w="32" h="11"/>
+					</dieground>
+				</animations>
+			</groundenemy>
+			<groundenemy x="656" y="128" texturepath="Assets/Textures/Enemigos/png sprites.png" deathfxpath="Assets/Audio/Fx/rat.wav" dest1X="38" dest1Y="9" dest2X="45" dest2Y="9">
+				<animations>
+					<idleground loop="true" speed="0.1f">
+						<idle x="0" y="0" w="32" h="13"/>
+						<idle x="32" y="0" w="32" h="13"/>
+						<idle x="64" y="0" w="32" h="13"/>
+						<idle x="96" y="0" w="32" h="13"/>
+					</idleground>
+					<moveground loop="true" speed="0.2f">
+						<walk x="0" y="49" w="32" h="13"/>
+						<walk x="32" y="49" w="32" h="13"/>
+						<walk x="64" y="49" w="32" h="13"/>
+						<walk x="96" y="49" w="32" h="13"/>
+					</moveground>
+					<dieground loop="false" speed="0.1f">
+						<die x="0" y="26" w="32" h="11"/>
+						<die x="32" y="26" w="32" h="11"/>
+						<die x="64" y="26" w="32" h="11"/>
+						<die x="96" y="26" w="32" h="11"/>
+					</dieground>
+				</animations>
+			</groundenemy>
+			<bossenemy x="2464" y="192" texturepath="Assets/Textures/Enemigos/boss.png" deathfxpath="Assets/Audio/Fx/explosion.wav" dest1X="136" dest1Y="15" dest2X="163" dest2Y="15">
+				<animations>
+					<idleboss loop="true" speed="0.1f">
+						<idle x="0" y="0" w="127" h="73"/>
+					</idleboss>
+					<moveboss loop="true" speed="0.2f">
+						<walk x="0" y="0" w="127" h="74"/>
+						<walk x="128" y="0" w="129" h="74"/>
+						<walk x="258" y="0" w="130" h="74"/>
+						<walk x="388" y="0" w="130" h="74"/>
+					</moveboss>
+					<dieboss loop="false" speed="0.1f">
+						<die x="0" y="206" w="128" h="90"/>
+						<die x="128" y="206" w="130" h="90"/>
+						<die x="258" y="206" w="130" h="90"/>
+						<die x="388" y="206" w="134" h="90"/>
+						<die x="522" y="206" w="112" h="90"/>
+					</dieboss>
+				</animations>
+			</bossenemy>
+		</enemy>
+	</scene2>
 
 </config>
