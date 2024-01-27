@@ -28,12 +28,13 @@ The game is about a dog trying to arrive to his owner. To do so, he will adventu
  - Q to bark.
  - F1 to go back to start
  - F3 to go back to start
- - F4 to die and trigger die animation, or revive if you're dead.
+ - F4 to die and trigger die animation, or revive if you're dead (before the game resets).
  - F5 to save snapshot.
  - F6 to load snapshot.
  - F8 button hitbox.
  - F9 toggle debug.
  - F10 God mode.
+ - In stage 1, L to jump straight to stage 2.
  - While in god mode, W to move up and S to move down. Jump is disabled.
 
 ## Developers
