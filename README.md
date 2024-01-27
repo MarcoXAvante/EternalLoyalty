@@ -26,6 +26,9 @@ The game is about a dog trying to arrive to his owner. To do so, he will adventu
  - D to move right.
  - SPACE to jump.
  - Q to bark.
+ - On the logo screen, gameover screen and victory screen, press enter to continue.
+ - While on menu, press ESC to close the game.
+ - While inside the game, press ESC to open the menu.
  - F1 to go back to start
  - F3 to go back to start
  - F4 to die and trigger die animation, or revive if you're dead (before the game resets).
